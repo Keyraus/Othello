@@ -13,6 +13,8 @@ Board* Board_Init() {
 
 	return board;
 }
+
+
 int Board_changeLine(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 {
 	int accu = 0;
@@ -86,7 +88,7 @@ int Board_changeColor(Board* board, int x, int y)
 	
 	return 0;
 }
-int Board_checkGain(Board* board, Pawn colorToCheck)
+void Board_checkGain(Board* board, Pawn colorToCheck)
 {
 	int mem = 0;
 	for (int x = 1; x < 9; ++x)
@@ -96,15 +98,14 @@ int Board_checkGain(Board* board, Pawn colorToCheck)
 				{
 					if (i == 0 && j == 0)
 						continue;
+
 					mem = board->gain[x - 1][y - 1];
-					board->gain[x-1][y-1] += Board_changeGain(board, x + i - 1, y + j - 1, i, j, colorToCheck);
+					board->gain[x - 1][y - 1] += Board_changeGain(board, x + i - 1, y + j - 1, i, j, colorToCheck);
 					if (board->gain[x - 1][y - 1] > mem)
 					{
 						board->gain[x - 1][y - 1]--;
 					}
 				}
-
-	return 0;
 }
 void Board_printGain(Board* board)
 {
@@ -132,6 +133,5 @@ int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 		{
 			return accu + 1;
 		}
-		return 0;
-	}
+	return 0;
 }

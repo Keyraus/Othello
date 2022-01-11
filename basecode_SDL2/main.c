@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 
 	SDL_Event e;
 	int quit = 0;
-
+	int num = 0;
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -157,7 +157,23 @@ int main(int argc, char** argv)
 					pos.y = y * 100;
 					SDL_RenderCopy(renderer, texture[Board_getColor(board,x,y)], NULL, &pos);
 				}
+				else if (board->gain[x][y]){
+					num = board->gain[x][y];
+					if (num / 10 > 0) {
+						numrect.x = 500;
+						numrect.y = 500;
+						numpos.x = 25 + 100 * x;
+						numpos.y = 25 + 100 * y;
+						SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+						num -= 10;
+					}
 					
+					numrect.x = num / 5 * 500;
+					numrect.y = num % 5 * 500;
+					numpos.x = 100 * x + 50;
+					numpos.y = 100 * y + 25;
+					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+				}
 				
 		
 		SDL_RenderPresent(renderer);
