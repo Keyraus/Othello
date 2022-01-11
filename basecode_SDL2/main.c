@@ -39,7 +39,12 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	window = SDL_CreateWindow("Ma fenetre SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Ma fenetre SDL",
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+		640, 640, 
+		SDL_WINDOW_SHOWN
+	);
+
 	if (!window)
 	{
 		printf("[-] ERROR - Failed to create SDL window (%s)\n", SDL_GetError());
@@ -48,21 +53,21 @@ int main(int argc, char** argv)
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	
-	image = IMG_Load("data/sprite.png");
+	image = IMG_Load("images/Board.jpg");
 	texture = SDL_CreateTextureFromSurface(renderer, image);
 	SDL_FreeSurface(image);
 
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
-	spriteRect.w = 120;
-	spriteRect.h = 130;
+	spriteRect.w = 530;
+	spriteRect.h = 530;
 	spriteRect.x = 0;
 	spriteRect.y = 0;
 
-	positionRect.w = 64;
-	positionRect.h = 48;
-	positionRect.x = 288;
-	positionRect.y = 216;
+	positionRect.w = 100;
+	positionRect.h = 100;
+	positionRect.x = 0;
+	positionRect.y = 0;
 
 	while (!quit)
 	{
@@ -108,10 +113,8 @@ int main(int argc, char** argv)
 			}
 		}
 
-		spriteRect.y = (int)(pos) * spriteRect.h;
-
 		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, texture, &spriteRect, &positionRect);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
 	}
 
