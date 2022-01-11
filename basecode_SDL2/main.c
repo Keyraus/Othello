@@ -14,10 +14,13 @@ int main(int argc, char** argv)
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
-	SDL_Texture* texture;
+	SDL_Texture* texture[3] = {NULL};
 	SDL_Surface* image;
+
 	SDL_Rect spriteRect;
-	SDL_Rect positionRect;
+	SDL_Rect spriteRect2;
+
+
 
 	SDL_Event e;
 	int quit = 0;
@@ -39,7 +42,12 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	window = SDL_CreateWindow("Ma fenetre SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Ma fenetre SDL",
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+		800, 800, 
+		SDL_WINDOW_SHOWN
+	);
+
 	if (!window)
 	{
 		printf("[-] ERROR - Failed to create SDL window (%s)\n", SDL_GetError());
@@ -48,21 +56,19 @@ int main(int argc, char** argv)
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	
-	image = IMG_Load("data/sprite.png");
-	texture = SDL_CreateTextureFromSurface(renderer, image);
+	image = IMG_Load("images/board.png");
+	texture[0] = SDL_CreateTextureFromSurface(renderer, image);
+	image = IMG_Load("images/white.png");
+	texture[1] = SDL_CreateTextureFromSurface(renderer, image);
+	image = IMG_Load("images/black.png");
+	texture[2] = SDL_CreateTextureFromSurface(renderer, image);
 	SDL_FreeSurface(image);
 
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
-	spriteRect.w = 120;
-	spriteRect.h = 130;
-	spriteRect.x = 0;
-	spriteRect.y = 0;
+	int setpion = 0;
+	int board[8][8] = { 0 };
 
-	positionRect.w = 64;
-	positionRect.h = 48;
-	positionRect.x = 288;
-	positionRect.y = 216;
 
 	while (!quit)
 	{
@@ -74,6 +80,10 @@ int main(int argc, char** argv)
 				quit = 1;
 				break;
 
+			case SDL_BUTTON_LEFT:
+				setpion = 1;
+
+
 			case SDL_KEYDOWN:
 				switch (e.key.keysym.sym)
 				{
@@ -83,22 +93,18 @@ int main(int argc, char** argv)
 
 				case SDLK_UP:
 					pos = UP;
-					positionRect.y -= positionRect.h/2;
 					break;
 
 				case SDLK_DOWN:
 					pos = DOWN;
-					positionRect.y += positionRect.h/2;
 					break;
 
 				case SDLK_RIGHT:
 					pos = RIGHT;
-					positionRect.x += positionRect.w / 2;
 					break;
 
 				case SDLK_LEFT:
 					pos = LEFT;
-					positionRect.x -= positionRect.w / 2;
 					break;
 				}
 				break;
@@ -108,10 +114,26 @@ int main(int argc, char** argv)
 			}
 		}
 
-		spriteRect.y = (int)(pos) * spriteRect.h;
+
+		printf("%d\n", setpion);
+		setpion = 0;
+		
+		SDL_GetMouseState(&spriteRect2.x, &spriteRect2.y);
+		spriteRect2.x = spriteRect2.x / 100 * 100;
+		spriteRect2.y = spriteRect2.y / 100 * 100;
 
 		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, texture, &spriteRect, &positionRect);
+		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				if (board[i][j])
+					SDL_RenderCopy(renderer, texture[board[i][j]], NULL, &spriteRect);
+			}
+		}
+		
+		SDL_RenderCopy(renderer, texture[2], NULL, &spriteRect2);
 		SDL_RenderPresent(renderer);
 	}
 
