@@ -14,13 +14,10 @@ int main(int argc, char** argv)
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
-	SDL_Texture* texture[3] = {NULL};
+	SDL_Texture* texture;
 	SDL_Surface* image;
-
 	SDL_Rect spriteRect;
 	SDL_Rect spriteRect2;
-
-
 
 	SDL_Event e;
 	int quit = 0;
@@ -42,12 +39,7 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	window = SDL_CreateWindow("Ma fenetre SDL",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
-		800, 800, 
-		SDL_WINDOW_SHOWN
-	);
-
+	window = SDL_CreateWindow("Ma fenetre SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
 	if (!window)
 	{
 		printf("[-] ERROR - Failed to create SDL window (%s)\n", SDL_GetError());
@@ -56,12 +48,8 @@ int main(int argc, char** argv)
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	
-	image = IMG_Load("images/board.png");
-	texture[0] = SDL_CreateTextureFromSurface(renderer, image);
-	image = IMG_Load("images/white.png");
-	texture[1] = SDL_CreateTextureFromSurface(renderer, image);
-	image = IMG_Load("images/black.png");
-	texture[2] = SDL_CreateTextureFromSurface(renderer, image);
+	image = IMG_Load("data/sprite.png");
+	texture = SDL_CreateTextureFromSurface(renderer, image);
 	SDL_FreeSurface(image);
 
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
@@ -69,6 +57,11 @@ int main(int argc, char** argv)
 	int setpion = 0;
 	int board[8][8] = { 0 };
 
+
+	positionRect.w = 64;
+	positionRect.h = 48;
+	positionRect.x = 288;
+	positionRect.y = 216;
 
 	while (!quit)
 	{
@@ -93,18 +86,22 @@ int main(int argc, char** argv)
 
 				case SDLK_UP:
 					pos = UP;
+					positionRect.y -= positionRect.h/2;
 					break;
 
 				case SDLK_DOWN:
 					pos = DOWN;
+					positionRect.y += positionRect.h/2;
 					break;
 
 				case SDLK_RIGHT:
 					pos = RIGHT;
+					positionRect.x += positionRect.w / 2;
 					break;
 
 				case SDLK_LEFT:
 					pos = LEFT;
+					positionRect.x -= positionRect.w / 2;
 					break;
 				}
 				break;
