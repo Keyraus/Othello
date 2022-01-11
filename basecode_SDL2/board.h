@@ -2,17 +2,12 @@ typedef enum Pawn_e
 {
 	NONE,
 	BLACK,
-	WHITE
-	
+	WHITE,
 }Pawn;
 
 typedef struct Board_s
 {
 	Pawn grid[8][8];
-	int gain[8][8];
 }Board;
 
-int Board_addPawn(Board* board, int x, int y, Pawn pawn);
-int Board_changeColor(Board* board, int x, int y);
-int Board_checkGain(Board* board);
-
+int Board_addPawn(Board* board, Pawn pawn);

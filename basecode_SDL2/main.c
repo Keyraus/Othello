@@ -55,8 +55,10 @@ int main(int argc, char** argv)
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
 	int setpion = 0;
-	int board[8][8] = { 0 };
-
+	Board* board = (Board*)calloc(1,sizeof(Board));
+	for (int i = 0; i < 8; ++i)
+		for (int j = 0; j < 8; ++j)
+			board->grid[i][j] = NONE;
 
 	positionRect.w = 64;
 	positionRect.h = 48;
@@ -73,13 +75,21 @@ int main(int argc, char** argv)
 				quit = 1;
 				break;
 
-			case SDL_BUTTON_LEFT:
+			case SDL_MOUSEBUTTONDOWN:
+				printf("boom\n");
 				setpion = 1;
-
+				SDL_GetMouseState(&spriteRect.x, &spriteRect.y);
+				spriteRect.x = spriteRect.x / 100;
+				spriteRect.y = spriteRect.y / 100;
+				board->grid[spriteRect.x][spriteRect.y] = BLACK;
+				printf("pion sur %d,%d de couleur %d", spriteRect.x, spriteRect.y, board->grid[spriteRect.x][spriteRect.y]);
+				break;
 
 			case SDL_KEYDOWN:
 				switch (e.key.keysym.sym)
 				{
+				
+
 				case SDLK_ESCAPE:
 					quit = 1;
 					break;
@@ -112,25 +122,24 @@ int main(int argc, char** argv)
 		}
 
 
-		printf("%d\n", setpion);
-		setpion = 0;
+		//printf("%d\n", setpion);
 		
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
 		SDL_GetMouseState(&spriteRect2.x, &spriteRect2.y);
 		spriteRect2.x = spriteRect2.x / 100 * 100;
 		spriteRect2.y = spriteRect2.y / 100 * 100;
-
-		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
-		for (int i = 0; i < 8; i++)
-		{
-			for (int j = 0; j < 8; j++)
-			{
-				if (board[i][j])
-					SDL_RenderCopy(renderer, texture[board[i][j]], NULL, &spriteRect);
-			}
-		}
-		
 		SDL_RenderCopy(renderer, texture[2], NULL, &spriteRect2);
+
+		for (int i = 0; i < 8; i++)
+			for (int j = 0; j < 8; j++)
+				if (board->grid[i][j])
+					SDL_RenderCopy(renderer, texture[board->grid[i][j]], NULL, &spriteRect);
+				
+		
+		
+		
+		SDL_RenderCopy(renderer, texture[1], NULL, &spriteRect);
 		SDL_RenderPresent(renderer);
 	}
 
