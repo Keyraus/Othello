@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 		}
 
 
-		printf("%d\n", setpion);
+		//printf("%d\n", setpion);
 		setpion = 0;
 		
 		SDL_GetMouseState(&spriteRect2.x, &spriteRect2.y);
@@ -134,6 +134,7 @@ int main(int argc, char** argv)
 		}
 		
 		SDL_RenderCopy(renderer, texture[2], NULL, &spriteRect2);
+		SDL_RenderCopy(renderer, texture[1], NULL, &spriteRect);
 		SDL_RenderPresent(renderer);
 	}
 
