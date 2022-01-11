@@ -29,7 +29,7 @@ int Board_changeLine(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 		if (accu)
 		{
 			Board_changeColor(board, x, y);
-			return  1;
+			return accu + 1;
 		}
 		return 0;
 	}
@@ -47,13 +47,12 @@ int Board_addPawn(Board* board, int x, int y, Pawn pawn)
 		{
 			if (i == 0 && j == 0)
 				continue;
-			total += Board_changeLine(board, x+i-1, y+j-1, i, j, pawn);
+			if (Board_changeLine(board, x + i - 1, y + j - 1, i, j, pawn) > 1) {
+				board->grid[x][y] = pawn;
+			}
 		}
 	
-	if (total) {
-		board->grid[x][y] = pawn;
-		return total;
-	}
+
 	return 0;
 }
 
