@@ -49,6 +49,7 @@ int main(int argc, char** argv)
 	SDL_Event e;
 	int quit = 0;
 	int num = 0;
+	int flaaaaaaaaaag = 0;
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -111,8 +112,13 @@ int main(int argc, char** argv)
 						
 
 						lastcolor = lastcolor % 2 + 1;
-						if (!Board_checkGain(board, lastcolor))
+						if (!Board_checkGain(board, lastcolor)) {
 							lastcolor = lastcolor % 2 + 1;
+							if (!Board_checkGain(board, lastcolor)) {
+								flaaaaaaaaaag = 1;
+								printf("né nififnit\n");
+							}
+						}
 					}
 						
 				
