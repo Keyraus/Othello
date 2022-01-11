@@ -90,6 +90,7 @@ int Board_changeColor(Board* board, int x, int y)
 }
 void Board_checkGain(Board* board, Pawn colorToCheck)
 {
+	int mem = 0;
 	for (int x = 1; x < 9; ++x)
 		for (int y = 1; y < 9; y++)
 			for (int i = -1; i < 2; i++)
@@ -105,9 +106,6 @@ void Board_checkGain(Board* board, Pawn colorToCheck)
 						board->gain[x - 1][y - 1]--;
 					}
 				}
-				if (directions & 0b00100000)
-				{
-
 }
 void Board_printGain(Board* board)
 {
