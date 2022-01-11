@@ -29,7 +29,7 @@ int Board_changeLine(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 		if (accu)
 		{
 			Board_changeColor(board, x, y);
-			return  1;
+			return accu + 1;
 		}
 		return 0;
 	}
