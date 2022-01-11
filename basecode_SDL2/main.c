@@ -15,10 +15,11 @@ int main(int argc, char** argv)
 	SDL_Renderer* renderer;
 
 	SDL_Texture* texture[3] = {NULL};
-	char** image[3] = {
-		"images/board.png",
-		"images/black.png",
-		"images/white.png"
+	SDL_Surface* image[3] = {
+		IMG_Load("images/board.png"),
+		IMG_Load("images/black.png"),
+		IMG_Load("images/white.png")
+
 	};
 
 	SDL_Rect pos;
@@ -60,12 +61,12 @@ int main(int argc, char** argv)
 	}
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	SDL_Surface* laimage;
+
 	for (int i = 0; i < 3; i++) {
-		laimage = IMG_Load(image[i]);
-		texture[i] = SDL_CreateTextureFromSurface(renderer, laimage);
+		texture[i] = SDL_CreateTextureFromSurface(renderer, image[i]);
+		SDL_FreeSurface(image[i]);
 	}
-	SDL_FreeSurface(image);
+		
 
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 

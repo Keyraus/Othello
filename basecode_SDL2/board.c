@@ -2,7 +2,7 @@
 
 Board* Board_Init() {
 	Board* board = (Board*)calloc(1, sizeof(Board));
-
+	
 	Board_addPawn(board, 3, 3, BLACK);
 	Board_addPawn(board, 3, 4, WHITE);
 	Board_addPawn(board, 4, 3, WHITE);
