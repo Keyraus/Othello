@@ -92,8 +92,8 @@ int main(int argc, char** argv)
 				pos.y /= 100;
 
 				if (!Board_getColor(board, pos.x, pos.y)) {
-					lastcolor = (lastcolor + 1) % 2;
 					Board_addPawn(board, pos.x, pos.y, lastcolor);
+					lastcolor = (lastcolor % 2) + 1;
 				}
 					
 				else
