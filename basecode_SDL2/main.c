@@ -15,20 +15,23 @@ int main(int argc, char** argv)
 	SDL_Renderer* renderer;
 
 	SDL_Texture* texture[3] = {NULL};
-	SDL_Surface* image;
+	SDL_Surface* image[3] = {
+		IMG_Load("images/board.png"),
+		IMG_Load("images/black.png"),
+		IMG_Load("images/white.png")
 
-	SDL_Rect spriteRect;
-	SDL_Rect spriteRect2;
+	};
 
-	spriteRect2.w = 100;
-	spriteRect2.h = 100;
-	spriteRect.h = 100;
-	spriteRect.w = 100;
+	SDL_Rect pos;
+	SDL_Rect pos2;
+
+	pos2.w = 100;
+	pos2.h = 100;
+	pos.h = 100;
+	pos.w = 100;
 
 	SDL_Event e;
 	int quit = 0;
-
-	int pos = DOWN;
 
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
 	{
@@ -58,27 +61,18 @@ int main(int argc, char** argv)
 	}
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	
-	image = IMG_Load("images/board.png");
-	texture[0] = SDL_CreateTextureFromSurface(renderer, image);
-	image = IMG_Load("images/black.png");
-	texture[1] = SDL_CreateTextureFromSurface(renderer, image);
-	image = IMG_Load("images/white.png");
-	texture[2] = SDL_CreateTextureFromSurface(renderer, image);
-	SDL_FreeSurface(image);
+
+	for (int i = 0; i < 3; i++) {
+		texture[i] = SDL_CreateTextureFromSurface(renderer, image[i]);
+		SDL_FreeSurface(image[i]);
+	}
+		
 
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
 	int setpion = 0;
 	int lastcolor = BLACK;
-	Board* board = (Board*)calloc(1,sizeof(Board));
-	for (int x = 0; x < 8; ++x)
-		for (int y = 0; y < 8; ++y)
-			Board_addPawn(board,x,y, NONE);
-	Board_addPawn(board, 3, 3, BLACK);
-	Board_addPawn(board, 3, 4, WHITE);
-	Board_addPawn(board, 4, 3, WHITE);
-	Board_addPawn(board, 4, 4, BLACK);
+	Board* board = Board_Init();
 
 	while (!quit)
 	{
@@ -93,13 +87,13 @@ int main(int argc, char** argv)
 			case SDL_MOUSEBUTTONDOWN:
 				printf("boom\n");
 				setpion = 1;
-				SDL_GetMouseState(&spriteRect.x, &spriteRect.y);
-				spriteRect.x = spriteRect.x / 100;
-				spriteRect.y = spriteRect.y / 100;
+				SDL_GetMouseState(&pos.x, &pos.y);
+				pos.x /= 100;
+				pos.y /= 100;
 
-				if (!board->grid[spriteRect.x][spriteRect.y]) {
-					lastcolor = (lastcolor + 1) % 2;
-					board->grid[spriteRect.x][spriteRect.y] = last;
+				if (!Board_getColor(board, pos.x, pos.y)) {
+					Board_addPawn(board, pos.x, pos.y, lastcolor);
+					lastcolor = (lastcolor % 2) + 1;
 				}
 					
 				else
@@ -116,19 +110,15 @@ int main(int argc, char** argv)
 					break;
 
 				case SDLK_UP:
-					pos = UP;
 					break;
 
 				case SDLK_DOWN:
-					pos = DOWN;
 					break;
 
 				case SDLK_RIGHT:
-					pos = RIGHT;
 					break;
 
 				case SDLK_LEFT:
-					pos = LEFT;
 					break;
 				}
 				break;
@@ -138,22 +128,20 @@ int main(int argc, char** argv)
 			}
 		}
 
-
-		//printf("%d\n", setpion);
-		
 		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
-		SDL_GetMouseState(&spriteRect2.x, &spriteRect2.y);
-		spriteRect2.x = spriteRect2.x / 100 * 100;
-		spriteRect2.y = spriteRect2.y / 100 * 100;
-		SDL_RenderCopy(renderer, texture[last], NULL, &spriteRect2);
 
-		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++)
-				if (board->grid[i][j]) {
-					spriteRect.x = i * 100;
-					spriteRect.y = j * 100;
-					SDL_RenderCopy(renderer, texture[board->grid[i][j]], NULL, &spriteRect);
+		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
+		SDL_GetMouseState(&pos2.x, &pos2.y);
+		pos2.x = pos2.x / 100 * 100;
+		pos2.y = pos2.y / 100 * 100;
+		SDL_RenderCopy(renderer, texture[lastcolor], NULL, &pos2);
+
+		for (int x = 0; x < 8; x++)
+			for (int y = 0; y < 8; y++)
+				if (Board_getColor(board,x,y)) {
+					pos.x = x * 100;
+					pos.y = y * 100;
+					SDL_RenderCopy(renderer, texture[Board_getColor(board,x,y)], NULL, &pos);
 				}
 					
 				

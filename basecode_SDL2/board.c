@@ -1,10 +1,8 @@
-#include "board.h"
+#include "utils.h"
 
 Board* Board_Init() {
 	Board* board = (Board*)calloc(1, sizeof(Board));
-	for (int x = 0; x < 10; ++x)
-		for (int y = 0; y < 10; y++)
-			board->grid[x][y] = NONE;
+
 	Board_addPawn(board, 3, 3, BLACK);
 	Board_addPawn(board, 3, 4, WHITE);
 	Board_addPawn(board, 4, 3, WHITE);
