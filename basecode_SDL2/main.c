@@ -70,15 +70,15 @@ int main(int argc, char** argv)
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
 	int setpion = 0;
-	int last = BLACK;
+	int lastcolor = BLACK;
 	Board* board = (Board*)calloc(1,sizeof(Board));
-	for (int i = 0; i < 8; ++i)
-		for (int j = 0; j < 8; ++j)
-			board->grid[i][j] = NONE;
-	board->grid[3][3] = BLACK;
-	board->grid[3][4] = WHITE;
-	board->grid[4][3] = WHITE;
-	board->grid[4][4] = BLACK;
+	for (int x = 0; x < 8; ++x)
+		for (int y = 0; y < 8; ++y)
+			Board_addPawn(board,x,y, NONE);
+	Board_addPawn(board, 3, 3, BLACK);
+	Board_addPawn(board, 3, 4, WHITE);
+	Board_addPawn(board, 4, 3, WHITE);
+	Board_addPawn(board, 4, 4, BLACK);
 
 	while (!quit)
 	{
@@ -98,11 +98,8 @@ int main(int argc, char** argv)
 				spriteRect.y = spriteRect.y / 100;
 
 				if (!board->grid[spriteRect.x][spriteRect.y]) {
-					
-					
+					lastcolor = (lastcolor + 1) % 2;
 					board->grid[spriteRect.x][spriteRect.y] = last;
-					last %= 2;
-					++last;
 				}
 					
 				else
