@@ -8,7 +8,7 @@ typedef enum Pawn_e
 typedef struct Board_s
 {
 	Pawn grid[10][10];
-	Pawn gain[8][8];
+	int gain[8][8];
 }Board;
 
 Board* Board_Init();

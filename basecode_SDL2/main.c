@@ -104,12 +104,14 @@ int main(int argc, char** argv)
 				pos.x /= 100;
 				pos.y /= 100;
 
-				if (!Board_getColor(board, pos.x, pos.y))
+				if (!Board_getColor(board, pos.x, pos.y)) {
 					if (Board_addPawn(board, pos.x, pos.y, lastcolor)) {
-						Board_checkGain(board, lastcolor);
-						lastcolor = (lastcolor % 2) + 1;
-					}
+						
+						Board_printGain(board);
+						Board_setGain(board, 0);
 				
+					}
+				}
 				break;
 
 			case SDL_KEYDOWN:
@@ -120,8 +122,12 @@ int main(int argc, char** argv)
 				case SDLK_ESCAPE:
 					quit = 1;
 					break;
-
-				case SDLK_UP:
+					Board_checkGain(board, lastcolor);
+					Board_printGain(board);
+					printf("\n");
+					Board_setGain(board, 0);
+					printf("\n");
+					Board_setGain(board, 0);
 					break;
 
 				case SDLK_DOWN:

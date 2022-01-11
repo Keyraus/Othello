@@ -93,24 +93,29 @@ void Board_checkGain(Board* board, Pawn colorToCheck)
 	int mem = 0;
 	for (int x = 1; x < 9; ++x)
 		for (int y = 1; y < 9; y++)
-			for (int i = -1; i < 2; i++)
-				for (int j = -1; j < 2; j++)
-				{
-					if (i == 0 && j == 0)
-						continue;
-
-					mem = board->gain[x - 1][y - 1];
-					board->gain[x - 1][y - 1] += Board_changeGain(board, x + i - 1, y + j - 1, i, j, colorToCheck);
-					if (board->gain[x - 1][y - 1] > mem)
+		{
+			if (Board_getColor(board, x - 1, y - 1) == NONE)
+			{
+				for (int i = -1; i < 2; i++)
+					for (int j = -1; j < 2; j++)
 					{
-						board->gain[x - 1][y - 1]--;
+						if (i == 0 && j == 0)
+							continue;
+
+						mem = board->gain[x - 1][y - 1];
+						(board->gain[x - 1][y - 1]) += Board_changeGain(board, x + i - 1, y + j - 1, i, j, colorToCheck);
+						if ((board->gain[x - 1][y - 1]) > mem)
+						{
+							(board->gain[x - 1][y - 1])--;
+						}
 					}
-				}
+			}
+		}
 }
 void Board_printGain(Board* board)
 {
-	for (int x = 0; x < 8; ++x) {
-		for (int y = 0; y < 8; y++)
+	for (int y = 0; y < 8; ++y) {
+		for (int x = 0; x < 8; x++)
 			printf("%d|", board->gain[x][y]);
 		printf("\n");
 	}
@@ -131,7 +136,7 @@ int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 		accu = Board_changeGain(board, x + x_d, y + y_d, x_d, y_d, color);
 		if (accu)
 		{
-			return accu + 1;
+			return ++accu;
 		}
 	}
 	return 0;
