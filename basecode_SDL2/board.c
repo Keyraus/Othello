@@ -2,7 +2,9 @@
 
 Board* Board_Init() {
 	Board* board = (Board*)calloc(1, sizeof(Board));
-	
+	for (int x = 0; x < 10; ++x)
+		for (int y = 0; y < 10; y++)
+			Board_addPawn(board, x, y, NONE);
 	Board_addPawn(board, 3, 3, BLACK);
 	Board_addPawn(board, 3, 4, WHITE);
 	Board_addPawn(board, 4, 3, WHITE);
@@ -18,9 +20,9 @@ int Board_addPawn(Board* board, int x, int y, Pawn pawn)
 {
 	x++;
 	y++;
-	if (board->grid[x+1][y+1])
+	if (board->grid[x][y])
 		return 1;
-	board->grid[x+1][y+1] = pawn;
+	board->grid[x][y] = pawn;
 	return 0;
 }
 

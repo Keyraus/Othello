@@ -129,6 +129,7 @@ int main(int argc, char** argv)
 		}
 
 		SDL_RenderClear(renderer);
+
 		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
 		SDL_GetMouseState(&pos2.x, &pos2.y);
 		pos2.x = pos2.x / 100 * 100;
