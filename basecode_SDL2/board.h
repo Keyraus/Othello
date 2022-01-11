@@ -12,6 +12,7 @@ typedef struct Board_s
 }Board;
 
 Board* Board_Init();
+int Board_changeLine(Board* board, int x, int y, int x_d, int y_d, Pawn color);
 int Board_addPawn(Board* board, int x, int y, Pawn pawn);
 int Board_changeColor(Board* board, int x, int y);
 Pawn Board_getColor(Board* board, int x, int y);
