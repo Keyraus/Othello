@@ -18,6 +18,7 @@ int main(int argc, char** argv)
 	SDL_Surface* image;
 
 	SDL_Rect spriteRect;
+	SDL_Rect spriteRect2;
 
 
 
@@ -65,10 +66,9 @@ int main(int argc, char** argv)
 
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
-	spriteRect.w = 100;
-	spriteRect.h = 100;
-	spriteRect.x = 0;
-	spriteRect.y = 0;
+	int setpion = 0;
+	int board[8][8] = { 0 };
+
 
 	while (!quit)
 	{
@@ -79,6 +79,10 @@ int main(int argc, char** argv)
 			case SDL_QUIT:
 				quit = 1;
 				break;
+
+			case SDL_BUTTON_LEFT:
+				setpion = 1;
+
 
 			case SDL_KEYDOWN:
 				switch (e.key.keysym.sym)
@@ -110,14 +114,26 @@ int main(int argc, char** argv)
 			}
 		}
 
+
+		printf("%d\n", setpion);
+		setpion = 0;
+		
+		SDL_GetMouseState(&spriteRect2.x, &spriteRect2.y);
+		spriteRect2.x = spriteRect2.x / 100 * 100;
+		spriteRect2.y = spriteRect2.y / 100 * 100;
+
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
-		SDL_RenderCopy(renderer, texture[1], NULL, &spriteRect);
-		spriteRect.x = 0;
-		spriteRect.y = 0;
-		SDL_RenderCopy(renderer, texture[2], NULL, &spriteRect);
-		spriteRect.x = 500;
-		spriteRect.y = 700;
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				if (board[i][j])
+					SDL_RenderCopy(renderer, texture[board[i][j]], NULL, &spriteRect);
+			}
+		}
+		
+		SDL_RenderCopy(renderer, texture[2], NULL, &spriteRect2);
 		SDL_RenderPresent(renderer);
 	}
 
