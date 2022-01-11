@@ -59,6 +59,7 @@ int main(int argc, char** argv)
 	image = IMG_Load("images/board.png");
 	texture[0] = SDL_CreateTextureFromSurface(renderer, image);
 	image = IMG_Load("images/white.png");
+	if (image) printf("ah");
 	texture[1] = SDL_CreateTextureFromSurface(renderer, image);
 	image = IMG_Load("images/black.png");
 	texture[2] = SDL_CreateTextureFromSurface(renderer, image);
@@ -136,8 +137,12 @@ int main(int argc, char** argv)
 
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
-				if (board->grid[i][j])
+				if (board->grid[i][j]) {
+					spriteRect.x = i * 100;
+					spriteRect.y = j * 100;
 					SDL_RenderCopy(renderer, texture[board->grid[i][j]], NULL, &spriteRect);
+				}
+					
 				
 		
 		
