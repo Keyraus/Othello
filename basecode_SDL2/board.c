@@ -133,5 +133,6 @@ int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 		{
 			return accu + 1;
 		}
+	}
 	return 0;
 }

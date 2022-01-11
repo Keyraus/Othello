@@ -31,8 +31,8 @@ int main(int argc, char** argv)
 
 	numrect.w = 500;
 	numrect.h = 500;
-	numrect.x = 500;
-	numrect.y = 500;
+	numrect.x = 0;
+	numrect.y = 0;
 
 	numpos.w = 50;
 	numpos.h = 50;
@@ -168,8 +168,8 @@ int main(int argc, char** argv)
 						num -= 10;
 					}
 					
-					numrect.x = num / 5 * 500;
-					numrect.y = num % 5 * 500;
+					numrect.x = num / 5 * 500; 
+					numrect.y = (num-1) % 5 * 500; 
 					numpos.x = 100 * x + 50;
 					numpos.y = 100 * y + 25;
 					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
