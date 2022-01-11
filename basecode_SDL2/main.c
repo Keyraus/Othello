@@ -20,7 +20,10 @@ int main(int argc, char** argv)
 	SDL_Rect spriteRect;
 	SDL_Rect spriteRect2;
 
-
+	spriteRect2.w = 100;
+	spriteRect2.h = 100;
+	spriteRect.h = 100;
+	spriteRect.w = 100;
 
 	SDL_Event e;
 	int quit = 0;
@@ -58,20 +61,24 @@ int main(int argc, char** argv)
 	
 	image = IMG_Load("images/board.png");
 	texture[0] = SDL_CreateTextureFromSurface(renderer, image);
-	image = IMG_Load("images/white.png");
-	if (image) printf("ah");
-	texture[1] = SDL_CreateTextureFromSurface(renderer, image);
 	image = IMG_Load("images/black.png");
+	texture[1] = SDL_CreateTextureFromSurface(renderer, image);
+	image = IMG_Load("images/white.png");
 	texture[2] = SDL_CreateTextureFromSurface(renderer, image);
 	SDL_FreeSurface(image);
 
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
 	int setpion = 0;
+	int last = BLACK;
 	Board* board = (Board*)calloc(1,sizeof(Board));
 	for (int i = 0; i < 8; ++i)
 		for (int j = 0; j < 8; ++j)
 			board->grid[i][j] = NONE;
+	board->grid[3][3] = BLACK;
+	board->grid[3][4] = WHITE;
+	board->grid[4][3] = WHITE;
+	board->grid[4][4] = BLACK;
 
 	while (!quit)
 	{
@@ -89,8 +96,17 @@ int main(int argc, char** argv)
 				SDL_GetMouseState(&spriteRect.x, &spriteRect.y);
 				spriteRect.x = spriteRect.x / 100;
 				spriteRect.y = spriteRect.y / 100;
-				board->grid[spriteRect.x][spriteRect.y] = BLACK;
-				printf("pion sur %d,%d de couleur %d", spriteRect.x, spriteRect.y, board->grid[spriteRect.x][spriteRect.y]);
+
+				if (!board->grid[spriteRect.x][spriteRect.y]) {
+					
+					
+					board->grid[spriteRect.x][spriteRect.y] = last;
+					last %= 2;
+					++last;
+				}
+					
+				else
+					printf("deja un pion\n");
 				break;
 
 			case SDL_KEYDOWN:
@@ -133,7 +149,7 @@ int main(int argc, char** argv)
 		SDL_GetMouseState(&spriteRect2.x, &spriteRect2.y);
 		spriteRect2.x = spriteRect2.x / 100 * 100;
 		spriteRect2.y = spriteRect2.y / 100 * 100;
-		SDL_RenderCopy(renderer, texture[2], NULL, &spriteRect2);
+		SDL_RenderCopy(renderer, texture[last], NULL, &spriteRect2);
 
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
@@ -145,9 +161,6 @@ int main(int argc, char** argv)
 					
 				
 		
-		
-		
-		SDL_RenderCopy(renderer, texture[1], NULL, &spriteRect);
 		SDL_RenderPresent(renderer);
 	}
 
