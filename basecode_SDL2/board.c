@@ -3,24 +3,57 @@
 Board* Board_Init() {
 	Board* board = (Board*)calloc(1, sizeof(Board));
 
-	Board_addPawn(board, 3, 3, BLACK);
-	Board_addPawn(board, 3, 4, WHITE);
-	Board_addPawn(board, 4, 3, WHITE);
-	Board_addPawn(board, 4, 4, BLACK);
+	board->grid[4][4] = BLACK;
+	board->grid[4][5] = WHITE;
+	board->grid[5][4] = WHITE;
+	board->grid[5][5] = BLACK;
+
 	
 	Board_setGain(board, 0);
 
 	return board;
 }
-
+int Board_changeLine(Board* board, int x, int y, int x_d, int y_d, Pawn color)
+{
+	int accu = 0;
+	if (x > 7 || x < 0 || y > 7 || y < 0)
+		return 0;
+	Pawn colorBoard = Board_getColor(board, x, y);
+	if (colorBoard == NONE)
+		return 0;
+	if (colorBoard == color)
+		return 1;
+	else
+	{
+		accu = Board_changeLine(board, x + x_d, y + y_d, x_d, y_d, color);
+		if (accu)
+		{
+			Board_changeColor(board, x, y);
+			return  1;
+		}
+		return 0;
+	}
+}
 
 int Board_addPawn(Board* board, int x, int y, Pawn pawn)
 {
 	x++;
 	y++;
-	if (board->grid[x][y])
-		return 1;
-	board->grid[x][y] = pawn;
+
+	int total = 0;
+	
+	for (int i = -1; i < 2; i++)
+		for (int j = -1; j < 2; j++)
+		{
+			if (i == 0 && j == 0)
+				continue;
+			total += Board_changeLine(board, x+i-1, y+j-1, i, j, pawn);
+		}
+	
+	if (total) {
+		board->grid[x][y] = pawn;
+		return total;
+	}
 	return 0;
 }
 
@@ -44,8 +77,8 @@ int Board_changeColor(Board* board, int x, int y)
 {
 	x++;
 	y++;
-	if (board->grid[x][y])
-		return 1;
+//	if (board->grid[x][y])
+//		return 1;
 	if (board->grid[x][y] == BLACK)
 		board->grid[x][y] = WHITE;
 	else
