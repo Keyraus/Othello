@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 		{
 			switch (e.type)
 			{
-			case SDL_QUIT:
+			case SDL_QUIT: 
 				quit = 1;
 				break;
 
