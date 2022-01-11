@@ -13,8 +13,6 @@ Board* Board_Init() {
 
 	return board;
 }
-
-
 int Board_changeLine(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 {
 	int accu = 0;
@@ -90,59 +88,50 @@ int Board_changeColor(Board* board, int x, int y)
 }
 int Board_checkGain(Board* board, Pawn colorToCheck)
 {
+	int mem = 0;
 	for (int x = 1; x < 9; ++x)
 		for (int y = 1; y < 9; y++)
-		{
-			if (board->gain[x][y] == colorToCheck)
-			{
-				char directions = 0b11111111;	//012
-				if (y == 1)						//7x3
-					directions &= 0b00011111;	//654
-				if (y == 8)
-					directions &= 0b11110001;
-				if (x == 1)
-					directions &= 0b01111100;
-				if (x == 8)
-					directions &= 0b11000111;
-
-
-				if (directions & 0b10000000)
+			for (int i = -1; i < 2; i++)
+				for (int j = -1; j < 2; j++)
 				{
-					int i = 0;
-					while (board->grid);
-				}
-				if (directions & 0b01000000)
-				{
-
-				}
-				if (directions & 0b00100000)
-				{
-
-				}
-				if (directions & 0b00010000)
-				{
-
-				}
-				if (directions & 0b00001000)
-				{
-
-				}
-				if (directions & 0b00000100)
-				{
-
-				}
-				if (directions & 0b00000010)
-				{
-
-				}
-				if (directions & 0b00000001)
-				{
-
+					if (i == 0 && j == 0)
+						continue;
+					mem = board->gain[x - 1][y - 1];
+					board->gain[x-1][y-1] += Board_changeGain(board, x + i - 1, y + j - 1, i, j, colorToCheck);
+					if (board->gain[x - 1][y - 1] > mem)
+					{
+						board->gain[x - 1][y - 1]--;
+					}
 				}
 
-				
-
-			}
-		}
 	return 0;
+}
+void Board_printGain(Board* board)
+{
+	for (int x = 0; x < 8; ++x) {
+		for (int y = 0; y < 8; y++)
+			printf("%d|", board->gain[x][y]);
+		printf("\n");
+	}
+}
+
+int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color)
+{
+	int accu = 0;
+	if (x > 7 || x < 0 || y > 7 || y < 0)
+		return 0;
+	Pawn colorBoard = Board_getColor(board, x, y);
+	if (colorBoard == NONE)
+		return 0;
+	if (colorBoard == color)
+		return 1;
+	else
+	{
+		accu = Board_changeGain(board, x + x_d, y + y_d, x_d, y_d, color);
+		if (accu)
+		{
+			return accu + 1;
+		}
+		return 0;
+	}
 }
