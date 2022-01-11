@@ -14,10 +14,12 @@ int main(int argc, char** argv)
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
-	SDL_Texture* texture;
+	SDL_Texture* texture[3] = {NULL};
 	SDL_Surface* image;
+
 	SDL_Rect spriteRect;
-	SDL_Rect positionRect;
+
+
 
 	SDL_Event e;
 	int quit = 0;
@@ -41,7 +43,7 @@ int main(int argc, char** argv)
 
 	window = SDL_CreateWindow("Ma fenetre SDL",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
-		640, 640, 
+		800, 800, 
 		SDL_WINDOW_SHOWN
 	);
 
@@ -53,21 +55,20 @@ int main(int argc, char** argv)
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	
-	image = IMG_Load("images/Board.jpg");
-	texture = SDL_CreateTextureFromSurface(renderer, image);
+	image = IMG_Load("images/board.png");
+	texture[0] = SDL_CreateTextureFromSurface(renderer, image);
+	image = IMG_Load("images/white.png");
+	texture[1] = SDL_CreateTextureFromSurface(renderer, image);
+	image = IMG_Load("images/black.png");
+	texture[2] = SDL_CreateTextureFromSurface(renderer, image);
 	SDL_FreeSurface(image);
 
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
-	spriteRect.w = 530;
-	spriteRect.h = 530;
+	spriteRect.w = 100;
+	spriteRect.h = 100;
 	spriteRect.x = 0;
 	spriteRect.y = 0;
-
-	positionRect.w = 100;
-	positionRect.h = 100;
-	positionRect.x = 0;
-	positionRect.y = 0;
 
 	while (!quit)
 	{
@@ -88,22 +89,18 @@ int main(int argc, char** argv)
 
 				case SDLK_UP:
 					pos = UP;
-					positionRect.y -= positionRect.h/2;
 					break;
 
 				case SDLK_DOWN:
 					pos = DOWN;
-					positionRect.y += positionRect.h/2;
 					break;
 
 				case SDLK_RIGHT:
 					pos = RIGHT;
-					positionRect.x += positionRect.w / 2;
 					break;
 
 				case SDLK_LEFT:
 					pos = LEFT;
-					positionRect.x -= positionRect.w / 2;
 					break;
 				}
 				break;
@@ -114,7 +111,13 @@ int main(int argc, char** argv)
 		}
 
 		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
+		SDL_RenderCopy(renderer, texture[1], NULL, &spriteRect);
+		spriteRect.x = 0;
+		spriteRect.y = 0;
+		SDL_RenderCopy(renderer, texture[2], NULL, &spriteRect);
+		spriteRect.x = 500;
+		spriteRect.y = 700;
 		SDL_RenderPresent(renderer);
 	}
 
