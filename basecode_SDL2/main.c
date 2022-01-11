@@ -87,8 +87,10 @@ int main(int argc, char** argv)
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
 	int lastcolor = BLACK;
-	Board* board = Board_Init();
 
+	Board* board = Board_Init();
+	Board_checkGain(board, lastcolor);
+	int theend = 0;
 	while (!quit)
 	{
 		while (SDL_PollEvent(&e))
@@ -104,14 +106,18 @@ int main(int argc, char** argv)
 				pos.x /= 100;
 				pos.y /= 100;
 
-				if (!Board_getColor(board, pos.x, pos.y)) {
+				if (!Board_getColor(board, pos.x, pos.y)) 
 					if (Board_addPawn(board, pos.x, pos.y, lastcolor)) {
 						
-						Board_printGain(board);
-						Board_setGain(board, 0);
-				
+
+						lastcolor = lastcolor % 2 + 1;
+						if (!Board_checkGain(board, lastcolor))
+							lastcolor = lastcolor % 2 + 1;
 					}
-				}
+						
+				
+					
+				
 				break;
 
 			case SDL_KEYDOWN:
@@ -121,13 +127,6 @@ int main(int argc, char** argv)
 
 				case SDLK_ESCAPE:
 					quit = 1;
-					break;
-					Board_checkGain(board, lastcolor);
-					Board_printGain(board);
-					printf("\n");
-					Board_setGain(board, 0);
-					printf("\n");
-					Board_setGain(board, 0);
 					break;
 
 				case SDLK_DOWN:
@@ -155,7 +154,6 @@ int main(int argc, char** argv)
 		pos2.x = pos2.x / 100 * 100;
 		pos2.y = pos2.y / 100 * 100;
 		SDL_RenderCopy(renderer, texture[lastcolor], NULL, &pos2);
-
 		for (int x = 0; x < 8; x++)
 			for (int y = 0; y < 8; y++)
 				if (Board_getColor(board,x,y)) {
@@ -173,18 +171,16 @@ int main(int argc, char** argv)
 						SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
 						num -= 10;
 					}
-					
-					numrect.x = num / 5 * 500; 
-					numrect.y = (num-1) % 5 * 500; 
-					numpos.x = 100 * x + 50;
+					printf("%d\n", num);
+					numrect.x = (num-1) % 5 * 500; 
+					numrect.y = num / 6 * 500; 
+					numpos.x = 100 * x + 40;
 					numpos.y = 100 * y + 25;
 					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
 				}
-				
 		
 		SDL_RenderPresent(renderer);
 	}
-
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

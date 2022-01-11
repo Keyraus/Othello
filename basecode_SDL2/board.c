@@ -88,8 +88,10 @@ int Board_changeColor(Board* board, int x, int y)
 	
 	return 0;
 }
-void Board_checkGain(Board* board, Pawn colorToCheck)
+int Board_checkGain(Board* board, Pawn colorToCheck)
 {
+	Board_setGain(board, 0);
+	int ispossible = 0;
 	int mem = 0;
 	for (int x = 1; x < 9; ++x)
 		for (int y = 1; y < 9; y++)
@@ -107,10 +109,13 @@ void Board_checkGain(Board* board, Pawn colorToCheck)
 						if ((board->gain[x - 1][y - 1]) > mem)
 						{
 							(board->gain[x - 1][y - 1])--;
+							if ((board->gain[x - 1][y - 1]) > mem)
+								ispossible = 1;
 						}
 					}
 			}
 		}
+	return ispossible;
 }
 void Board_printGain(Board* board)
 {
