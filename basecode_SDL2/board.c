@@ -126,6 +126,23 @@ void Board_printGain(Board* board)
 	}
 }
 
+Pawn Board_countPieces(Board* board, int* white, int* black, int* none)
+{
+	int tab[3] = { 0 };
+	for (int y = 0; y < 8; ++y) {
+		for (int x = 0; x < 8; x++)
+			tab[Board_getColor(board, x, y)]++;
+	}
+	*white = tab[WHITE];
+	*black = tab[BLACK];
+	*none = tab[NONE];
+	if (tab[WHITE] > tab[BLACK])
+		return WHITE;
+	else if (tab[BLACK] > tab[WHITE])
+		return BLACK;
+	else
+		return NONE;
+}
 int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 {
 	int accu = 0;

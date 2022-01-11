@@ -50,6 +50,7 @@ int main(int argc, char** argv)
 	int quit = 0;
 	int num = 0;
 	int flaaaaaaaaaag = 0;
+	int white, black, none;
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -117,6 +118,13 @@ int main(int argc, char** argv)
 							if (!Board_checkGain(board, lastcolor)) {
 								flaaaaaaaaaag = 1;
 								printf("né nififnit\n");
+								Pawn winnerColor = Board_countPieces(board, &white, &black, &none);
+								if (winnerColor == WHITE)
+									printf("white gagne avec : %d points\n", white + none);
+								else if (winnerColor == BLACK)
+									printf("black gagne avec : %d points\n", black + none);
+								else
+									printf("Egalite\n");
 							}
 						}
 					}
