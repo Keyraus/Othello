@@ -1,8 +1,8 @@
 typedef enum Pawn_e
 {
+	NONE,
 	BLACK,
 	WHITE,
-	NONE
 }Pawn;
 
 typedef struct Board_s
