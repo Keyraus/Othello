@@ -14,16 +14,32 @@ int main(int argc, char** argv)
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
-	SDL_Texture* texture[3] = {NULL};
-	SDL_Surface* image[3] = {
+	SDL_Texture* texture[5] = {NULL};
+	SDL_Surface* image[5] = {
 		IMG_Load("images/board.png"),
 		IMG_Load("images/black.png"),
-		IMG_Load("images/white.png")
-
+		IMG_Load("images/white.png"),
+		IMG_Load("images/num.png"),
+		IMG_Load("images/num.png")
 	};
 
 	SDL_Rect pos;
 	SDL_Rect pos2;
+
+	SDL_Rect numrect;
+	SDL_Rect numpos;
+
+	numrect.w = 500;
+	numrect.h = 500;
+	numrect.x = 500;
+	numrect.y = 500;
+
+	numpos.w = 50;
+	numpos.h = 50;
+	numpos.x = 0;
+	numpos.y = 25;
+
+
 
 	pos2.w = 100;
 	pos2.h = 100;
@@ -32,7 +48,7 @@ int main(int argc, char** argv)
 
 	SDL_Event e;
 	int quit = 0;
-
+	int num = 0;
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -62,7 +78,7 @@ int main(int argc, char** argv)
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 5; ++i) {
 		texture[i] = SDL_CreateTextureFromSurface(renderer, image[i]);
 		SDL_FreeSurface(image[i]);
 	}
@@ -91,7 +107,9 @@ int main(int argc, char** argv)
 				if (!Board_getColor(board, pos.x, pos.y)) {
 					if (Board_addPawn(board, pos.x, pos.y, lastcolor)) {
 						
-						lastcolor = (lastcolor % 2) + 1;
+						Board_printGain(board);
+						Board_setGain(board, 0);
+				
 					}
 				}
 				break;
@@ -104,10 +122,10 @@ int main(int argc, char** argv)
 				case SDLK_ESCAPE:
 					quit = 1;
 					break;
-
-				case SDLK_UP:
 					Board_checkGain(board, lastcolor);
 					Board_printGain(board);
+					printf("\n");
+					Board_setGain(board, 0);
 					printf("\n");
 					Board_setGain(board, 0);
 					break;
@@ -131,6 +149,8 @@ int main(int argc, char** argv)
 		SDL_RenderClear(renderer);
 
 		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
+		SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+		//SDL_RenderCopy(renderer, texture[4], &numrect, &numpos);
 		SDL_GetMouseState(&pos2.x, &pos2.y);
 		pos2.x = pos2.x / 100 * 100;
 		pos2.y = pos2.y / 100 * 100;
@@ -143,7 +163,23 @@ int main(int argc, char** argv)
 					pos.y = y * 100;
 					SDL_RenderCopy(renderer, texture[Board_getColor(board,x,y)], NULL, &pos);
 				}
+				else if (board->gain[x][y]){
+					num = board->gain[x][y];
+					if (num / 10 > 0) {
+						numrect.x = 500;
+						numrect.y = 500;
+						numpos.x = 25 + 100 * x;
+						numpos.y = 25 + 100 * y;
+						SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+						num -= 10;
+					}
 					
+					numrect.x = num / 5 * 500;
+					numrect.y = num % 5 * 500;
+					numpos.x = 100 * x + 50;
+					numpos.y = 100 * y + 25;
+					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+				}
 				
 		
 		SDL_RenderPresent(renderer);
