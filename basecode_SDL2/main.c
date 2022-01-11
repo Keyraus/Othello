@@ -70,7 +70,6 @@ int main(int argc, char** argv)
 
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
-	int setpion = 0;
 	int lastcolor = BLACK;
 	Board* board = Board_Init();
 
@@ -80,24 +79,23 @@ int main(int argc, char** argv)
 		{
 			switch (e.type)
 			{
-			case SDL_QUIT:
+			case SDL_QUIT: 
 				quit = 1;
 				break;
 
 			case SDL_MOUSEBUTTONDOWN:
-				printf("boom\n");
-				setpion = 1;
 				SDL_GetMouseState(&pos.x, &pos.y);
 				pos.x /= 100;
 				pos.y /= 100;
 
 				if (!Board_getColor(board, pos.x, pos.y)) {
-					Board_addPawn(board, pos.x, pos.y, lastcolor);
-					lastcolor = (lastcolor % 2) + 1;
-				}
-					
-				else
-					printf("deja un pion\n");
+					if (Board_addPawn(board, pos.x, pos.y, lastcolor)) {
+						Board_checkGain(board, lastcolor);
+						Board_printGain(board);
+						Board_setGain(board, 0);
+						lastcolor = (lastcolor % 2) + 1;
+					}
+				
 				break;
 
 			case SDL_KEYDOWN:
