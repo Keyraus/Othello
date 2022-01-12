@@ -127,6 +127,7 @@ int main(int argc, char** argv)
 									printf("Egalite\n");
 							}
 						}
+						Bot_doAFlip(board, lastcolor % 2 + 1, 2);
 					}
 						
 				

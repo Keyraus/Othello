@@ -2,6 +2,7 @@
 
 Board* Board_Init() {
 	Board* board = (Board*)calloc(1, sizeof(Board));
+	assert(board);
 
 	board->grid[4][4] = BLACK;
 	board->grid[4][5] = WHITE;
@@ -13,7 +14,6 @@ Board* Board_Init() {
 
 	return board;
 }
-
 
 int Board_changeLine(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 {
@@ -66,15 +66,11 @@ void Board_setGain(Board* board, int value)
 			board->gain[x][y] = value;
 }
 
-void Board_placePawn(Board* board, int x, int y)
-{
-
-}
-
 Pawn Board_getColor(Board* board, int x, int y)
 {
 	return board->grid[x+1][y+1];
 }
+
 int Board_changeColor(Board* board, int x, int y)
 {
 	x++;
@@ -88,6 +84,7 @@ int Board_changeColor(Board* board, int x, int y)
 	
 	return 0;
 }
+
 int Board_checkGain(Board* board, Pawn colorToCheck)
 {
 	Board_setGain(board, 0);
@@ -117,6 +114,7 @@ int Board_checkGain(Board* board, Pawn colorToCheck)
 		}
 	return ispossible;
 }
+
 void Board_printGain(Board* board)
 {
 	for (int y = 0; y < 8; ++y) {
@@ -143,6 +141,7 @@ Pawn Board_countPieces(Board* board, int* white, int* black, int* none)
 	else
 		return NONE;
 }
+
 int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 {
 	int accu = 0;
@@ -163,6 +162,7 @@ int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 	}
 	return 0;
 }
+
 int Board_getCountPlays(Board* board)
 {
 	int count = 0;
@@ -173,7 +173,6 @@ int Board_getCountPlays(Board* board)
 
 	return count;
 }
-
 
 void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* texture[6], Pawn winnerColor, int pawns[3], int flag) {
 	int num = 0;

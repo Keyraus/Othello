@@ -5,6 +5,10 @@ int Bot_doAFlip(Board* original, Pawn playedColor, int depth)
 	BotNode* root = Bot_newNode(original, depth, true);
 	int childTabSize = Board_getCountPlays(original);
 
+	root->actualGame = original;
+	root->playedColor = playedColor;
+	root->depth = depth;
+	root->max = true;
 	root->childs = calloc(childTabSize, sizeof(BotNode*));
 	assert(root->childs);
 
@@ -46,12 +50,12 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 	//TODO CALCULER SI AUCUNES POSSIBILITER
 	BotNode* node = Bot_newNode(parent->actualGame, parent->depth-1, !parent->max);
 	parent->childs[tabPos] = node;
-	Board_addPawn(parent->actualGame, x, y, parent->playedColor);
+	Board_addPawn(node->actualGame, x, y, parent->playedColor);
 	
 	node->value = gain ;
 	node->playedColor = node->playedColor % 2 + 1;
 	
-	int childTabSize = Board_getCountPlays(parent->actualGame);
+	int childTabSize = Board_getCountPlays(node->actualGame);
 	node->childs = calloc(childTabSize, sizeof(BotNode*));
 	assert(node->childs);
 
@@ -76,7 +80,6 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 	return node->childs[min_max]->value + gain;
 }
 
-
 BotNode* Bot_newNode(Board* toCopy, int depth, bool mode)
 {
 	BotNode* node = calloc(1, sizeof(BotNode));
@@ -87,11 +90,13 @@ BotNode* Bot_newNode(Board* toCopy, int depth, bool mode)
 
 	SDL_memcpy(newBoard, toCopy, sizeof(Board));
 	
+	node->actualGame = newBoard;
 	node->depth = depth;
 	node->max = mode;
 
 	return node;
 }
+
 void Bot_freeNode(BotNode* node)
 {
 
