@@ -1,5 +1,12 @@
 #pragma once
+#include "utils.h"
+
 typedef struct BotNode_s
 {
-	int ok;
+	Board* actualGame;
+	int value;
+	int depth;
+
+	struct BotNode_s* childs;
+
 }BotNode;
