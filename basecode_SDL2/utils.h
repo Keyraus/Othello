@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include <assert.h>
+
 #include "../librairies/SDL2-2.0.6/include/SDL.h"
 #include "../librairies/SDL2-2.0.6/include/SDL_ttf.h"
 #include "../librairies/SDL2-2.0.6/include/SDL_mixer.h"

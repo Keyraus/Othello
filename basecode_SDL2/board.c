@@ -163,3 +163,13 @@ int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 	}
 	return 0;
 }
+int Board_getCountPlays(Board* board)
+{
+	int count = 0;
+	for (int y = 0; y < 8; ++y) 
+		for (int x = 0; x < 8; x++)
+			if (board->gain[x][y])
+				count++;
+
+	return count;
+}

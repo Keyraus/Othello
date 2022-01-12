@@ -23,3 +23,5 @@ int Board_checkGain(Board* board, Pawn colorToCheck);
 
 void Board_printGain(Board* board);
 int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color);
+
+int Board_getCountPlays(Board* board);
