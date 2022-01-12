@@ -1,3 +1,5 @@
+#pragma once
+
 typedef enum Pawn_e
 {
 	NONE,

@@ -159,10 +159,12 @@ xcopy /I /Y "$(SolutionDir)basecode_SDL2\data" "$(SolutionDir)bin\x64\data\"</Co
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="board.c" />
+    <ClCompile Include="bot.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
+    <ClInclude Include="bot.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
