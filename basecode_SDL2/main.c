@@ -22,7 +22,6 @@ int main(int argc, char** argv)
 		IMG_Load("images/num.png"),
 		IMG_Load("images/num.png"),
 		IMG_Load("images/winner.png"),
-		
 	};
 
 	SDL_Rect pos;
@@ -162,65 +161,18 @@ int main(int argc, char** argv)
 
 		SDL_RenderClear(renderer);
 
+		// background
 		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
-		SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
-		//SDL_RenderCopy(renderer, texture[4], &numrect, &numpos);
 		SDL_GetMouseState(&pos2.x, &pos2.y);
 		pos2.x = pos2.x / 100 * 100;
 		pos2.y = pos2.y / 100 * 100;
+		// pyon ki flot avek la souri
 		SDL_RenderCopy(renderer, texture[lastcolor], NULL, &pos2);
-		for (int x = 0; x < 8; x++)
-			for (int y = 0; y < 8; y++)
-				if (Board_getColor(board,x,y)) {
-					pos.x = x * 100;
-					pos.y = y * 100;
-					SDL_RenderCopy(renderer, texture[Board_getColor(board,x,y)], NULL, &pos);
-				}
-				else if (board->gain[x][y]){
-					num = board->gain[x][y];
-					if (num / 10 > 0) {
-						numrect.x = 500;
-						numrect.y = 500;
-						numpos.x = 25 + 100 * x;
-						numpos.y = 25 + 100 * y;
-						SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
-						num -= 10;
-					}
-					//rintf("%d\n", num);
-					numrect.x = (num-1) % 5 * 500; 
-					numrect.y = num / 6 * 500; 
-					numpos.x = 100 * x + 40;
-					numpos.y = 100 * y + 25;
-					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
-				}
-		if (flaaaaaaaaaag) {
-			pos.h = 600;
-			pos.w = 700;
-			pos.x = 50;
-			pos.y = 100;
-			SDL_RenderCopy(renderer, texture[5], NULL, &pos);
-			pos.h = 200;
-			pos.w = 200;
-			pos.x = 300;
-			pos.y = 275;
-			SDL_RenderCopy(renderer, texture[winnerColor], NULL, &pos);
-			pos.h = 100;
-			pos.w = 100;
-			printf("%d\n", pawns[winnerColor]  );
-			numrect.x = 500 * (pawns[winnerColor]-1) / 10 % 5;
-			numrect.y = 500 * (pawns[winnerColor] / 10) / 5;
-			numpos.x = 360;
-			numpos.y = 375;
-			SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+		Board_render(board, renderer, texture, winnerColor, pawns,flaaaaaaaaaag);
 		
-			numrect.x = ((pawns[winnerColor] - 10 * (pawns[winnerColor] / 10)) - 1) % 5 * 500;
-			numrect.y = (pawns[winnerColor] - 10 * (pawns[winnerColor] / 10 )) / 6 * 500;
-			numpos.x = 390;
-			numpos.y = 375;
-			SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
-		}
 		SDL_RenderPresent(renderer);
 	}
+
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
