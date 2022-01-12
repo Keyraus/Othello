@@ -6,6 +6,8 @@ typedef struct BotNode_s
 	Board* actualGame;
 	Pawn playedColor;
 	int value;
+	int x;
+	int y;
 	int depth;
 	bool max;
 

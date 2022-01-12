@@ -12,29 +12,24 @@ int Bot_doAFlip(Board* original, Pawn playedColor, int depth)
 	root->childs = calloc(childTabSize, sizeof(BotNode*));
 	assert(root->childs);
 
-	BoardPlay* gainPlay = calloc(childTabSize, sizeof(BoardPlay));
-	assert(gainPlay);
-
 	int i = 0;
 	for (int y = 0; y < 8; ++y)
 		for (int x = 0; x < 8; x++)
 			if (original->gain[x][y])
 			{
-				gainPlay[i].value = Bot_addChild(root, x, y, i);
-				gainPlay[i].x = x;
-				gainPlay[i++].y = y;
+				Bot_addChild(root, x, y, i++);
 			}
 
 	int max = 0;
 	for (int j = 0; j < childTabSize; j++)
 	{
-		if (gainPlay[j].value > gainPlay[max].value)
+		if (root->childs[j]->value > root->childs[max]->value)
 		{
 			max = j;
 		}
 	}
 
-	Board_addPawn(original, gainPlay[max].x, gainPlay[max].y, playedColor);
+	Board_addPawn(original, root->childs[max]->x, root->childs[max]->y, playedColor);
 
 	return 0;
 }
@@ -45,6 +40,10 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 	int gain = parent->actualGame->gain[x][y] * mode;//if goes boom
 	if (!parent->depth)
 	{
+		BotNode* node = calloc(1, sizeof(BotNode));
+		assert(node);
+		parent->childs[tabPos] = node;
+		node->value = gain;
 		return gain;
 	}
 	//TODO CALCULER SI AUCUNES POSSIBILITER
@@ -67,7 +66,8 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 		for (int x = 0; x < 8; x++)
 			if (parent->actualGame->gain[x][y])
 			{
-				gainLeaves[i] = Bot_addChild(node, x, y, i++);
+				Bot_addChild(node, x, y, i++);
+				
 			}
 	int min_max = 0;
 	for (int j = 0; j < childTabSize; j++)
@@ -77,7 +77,10 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 			min_max = j;
 		}
 	}
-	return node->childs[min_max]->value + gain;
+	node->value = node->childs[min_max]->value + gain;
+	node->childs[min_max]->x = x;
+	node->childs[min_max]->y = y;
+	return 0;
 }
 
 BotNode* Bot_newNode(Board* toCopy, int depth, bool mode)
