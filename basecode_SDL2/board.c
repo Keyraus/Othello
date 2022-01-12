@@ -5,7 +5,7 @@ Board* Board_Init() {
 
 	board->grid[4][4] = BLACK;
 	board->grid[4][5] = WHITE;
-	board->grid[5][4] = WHITE;
+	board->grid[5][4] = WHITE;//
 	board->grid[5][5] = BLACK;
 
 	
@@ -172,4 +172,63 @@ int Board_getCountPlays(Board* board)
 				count++;
 
 	return count;
+}
+
+
+void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* texture[6], Pawn winnerColor, int pawns[3], int flag) {
+	int num = 0;
+	SDL_Rect pos = { 0,0,100,100 };
+	SDL_Rect numrect = { 0,0,500,500 };
+	SDL_Rect numpos = { 0,25,50,50 };
+
+	for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < 8; y++)
+			if (Board_getColor(board, x, y)) {
+				pos.x = x * 100;
+				pos.y = y * 100;
+				SDL_RenderCopy(renderer, texture[Board_getColor(board, x, y)], NULL, &pos);
+			}
+			else if (board->gain[x][y]) {
+				num = board->gain[x][y];
+				if (num / 10 > 0) {
+					numrect.x = 500;
+					numrect.y = 500;
+					numpos.x = 25 + 100 * x;
+					numpos.y = 25 + 100 * y;
+					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+					num -= 10;
+				}
+				//rintf("%d\n", num);
+				numrect.x = (num - 1) % 5 * 500;
+				numrect.y = num / 6 * 500;
+				numpos.x = 100 * x + 40;
+				numpos.y = 100 * y + 25;
+				SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+			}
+	}
+	if (flag) {
+		pos.h = 600;
+		pos.w = 700;
+		pos.x = 50;
+		pos.y = 100;
+		SDL_RenderCopy(renderer, texture[5], NULL, &pos);
+		pos.h = 200;
+		pos.w = 200;
+		pos.x = 300;
+		pos.y = 275;
+		SDL_RenderCopy(renderer, texture[winnerColor], NULL, &pos);
+		pos.h = 100;
+		pos.w = 100;
+		numrect.x = 500 * (pawns[winnerColor] - 1) / 10 % 5;
+		numrect.y = 500 * (pawns[winnerColor] / 10) / 5;
+		numpos.x = 360;
+		numpos.y = 375;
+		SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+
+		numrect.x = ((pawns[winnerColor] - 10 * (pawns[winnerColor] / 10)) - 1) % 5 * 500;
+		numrect.y = (pawns[winnerColor] - 10 * (pawns[winnerColor] / 10)) / 6 * 500;
+		numpos.x = 390;
+		numpos.y = 375;
+		SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+	}
 }

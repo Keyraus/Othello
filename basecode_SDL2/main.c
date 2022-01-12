@@ -22,7 +22,6 @@ int main(int argc, char** argv)
 		IMG_Load("images/num.png"),
 		IMG_Load("images/num.png"),
 		IMG_Load("images/winner.png"),
-		
 	};
 
 	SDL_Rect pos;
@@ -52,7 +51,7 @@ int main(int argc, char** argv)
 	int quit = 0;
 	int num = 0;
 	int flaaaaaaaaaag = 0;
-	int white, black, none;
+	int pawns[3] = {0};
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -91,7 +90,7 @@ int main(int argc, char** argv)
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
 	int lastcolor = BLACK;
-
+	Pawn winnerColor = 0;
 	Board* board = Board_Init();
 	Board_checkGain(board, lastcolor);
 	int theend = 0;
@@ -120,11 +119,10 @@ int main(int argc, char** argv)
 							if (!Board_checkGain(board, lastcolor)) {
 								flaaaaaaaaaag = 1;
 								printf("né nififnit\n");
-								Pawn winnerColor = Board_countPieces(board, &white, &black, &none);
-								if (winnerColor == WHITE)
-									printf("white gagne avec : %d points\n", white + none);
-								else if (winnerColor == BLACK)
-									printf("black gagne avec : %d points\n", black + none);
+								winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
+								pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
+								if (winnerColor != NONE)
+									printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
 								else
 									printf("Egalite\n");
 							}
@@ -163,51 +161,18 @@ int main(int argc, char** argv)
 
 		SDL_RenderClear(renderer);
 
+		// background
 		SDL_RenderCopy(renderer, texture[0], NULL, NULL);
-		SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
-		//SDL_RenderCopy(renderer, texture[4], &numrect, &numpos);
 		SDL_GetMouseState(&pos2.x, &pos2.y);
 		pos2.x = pos2.x / 100 * 100;
 		pos2.y = pos2.y / 100 * 100;
+		// pyon ki flot avek la souri
 		SDL_RenderCopy(renderer, texture[lastcolor], NULL, &pos2);
-		for (int x = 0; x < 8; x++)
-			for (int y = 0; y < 8; y++)
-				if (Board_getColor(board,x,y)) {
-					pos.x = x * 100;
-					pos.y = y * 100;
-					SDL_RenderCopy(renderer, texture[Board_getColor(board,x,y)], NULL, &pos);
-				}
-				else if (board->gain[x][y]){
-					num = board->gain[x][y];
-					if (num / 10 > 0) {
-						numrect.x = 500;
-						numrect.y = 500;
-						numpos.x = 25 + 100 * x;
-						numpos.y = 25 + 100 * y;
-						SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
-						num -= 10;
-					}
-					printf("%d\n", num);
-					numrect.x = (num-1) % 5 * 500; 
-					numrect.y = num / 6 * 500; 
-					numpos.x = 100 * x + 40;
-					numpos.y = 100 * y + 25;
-					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
-				}
-		if (flaaaaaaaaaag) {
-			pos.h = 600;
-			pos.w = 600;
-			pos.x = 200;
-			pos.y = 200;
-			SDL_RenderCopy(renderer, texture[5], NULL, &pos);
-			pos.h = 200;
-			pos.w = 200;
-			pos.x = 300;
-			pos.y = 300;
-			SDL_RenderCopy(renderer, texture[lastcolor], NULL, &pos);
-		}
+		Board_render(board, renderer, texture, winnerColor, pawns,flaaaaaaaaaag);
+		
 		SDL_RenderPresent(renderer);
 	}
+
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
