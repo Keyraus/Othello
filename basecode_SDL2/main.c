@@ -178,7 +178,7 @@ int main(int argc, char** argv)
 					numpos.y = 100 * y + 25;
 					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
 				}
-		
+						
 		SDL_RenderPresent(renderer);
 	}
 	SDL_DestroyRenderer(renderer);
