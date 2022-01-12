@@ -20,6 +20,6 @@ int Board_changeColor(Board* board, int x, int y);
 Pawn Board_getColor(Board* board, int x, int y);
 void Board_setGain(Board* board, int value);
 int Board_checkGain(Board* board, Pawn colorToCheck);
-
+void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* textures[6], Pawn winnerColor, int pawns[3]);
 void Board_printGain(Board* board);
 int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color);

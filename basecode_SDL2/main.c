@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 	int quit = 0;
 	int num = 0;
 	int flaaaaaaaaaag = 0;
-	int white, black, none;
+	int pawns[3] = {0};
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 	SDL_SetRenderDrawColor(renderer, 40, 110, 0, 255);
 
 	int lastcolor = BLACK;
-
+	Pawn winnerColor = 0;
 	Board* board = Board_Init();
 	Board_checkGain(board, lastcolor);
 	int theend = 0;
@@ -120,11 +120,10 @@ int main(int argc, char** argv)
 							if (!Board_checkGain(board, lastcolor)) {
 								flaaaaaaaaaag = 1;
 								printf("né nififnit\n");
-								Pawn winnerColor = Board_countPieces(board, &white, &black, &none);
-								if (winnerColor == WHITE)
-									printf("white gagne avec : %d points\n", white + none);
-								else if (winnerColor == BLACK)
-									printf("black gagne avec : %d points\n", black + none);
+								winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
+								pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
+								if (winnerColor != NONE)
+									printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
 								else
 									printf("Egalite\n");
 							}
@@ -187,7 +186,7 @@ int main(int argc, char** argv)
 						SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
 						num -= 10;
 					}
-					printf("%d\n", num);
+					//rintf("%d\n", num);
 					numrect.x = (num-1) % 5 * 500; 
 					numrect.y = num / 6 * 500; 
 					numpos.x = 100 * x + 40;
@@ -196,15 +195,29 @@ int main(int argc, char** argv)
 				}
 		if (flaaaaaaaaaag) {
 			pos.h = 600;
-			pos.w = 600;
-			pos.x = 200;
-			pos.y = 200;
+			pos.w = 700;
+			pos.x = 50;
+			pos.y = 100;
 			SDL_RenderCopy(renderer, texture[5], NULL, &pos);
 			pos.h = 200;
 			pos.w = 200;
 			pos.x = 300;
-			pos.y = 300;
-			SDL_RenderCopy(renderer, texture[lastcolor], NULL, &pos);
+			pos.y = 275;
+			SDL_RenderCopy(renderer, texture[winnerColor], NULL, &pos);
+			pos.h = 100;
+			pos.w = 100;
+			printf("%d\n", pawns[winnerColor]  );
+			numrect.x = 500 * (pawns[winnerColor]-1) / 10 % 5;
+			numrect.y = 500 * (pawns[winnerColor] / 10) / 5;
+			numpos.x = 360;
+			numpos.y = 375;
+			SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+		
+			numrect.x = ((pawns[winnerColor] - 10 * (pawns[winnerColor] / 10)) - 1) % 5 * 500;
+			numrect.y = (pawns[winnerColor] - 10 * (pawns[winnerColor] / 10 )) / 6 * 500;
+			numpos.x = 390;
+			numpos.y = 375;
+			SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
 		}
 		SDL_RenderPresent(renderer);
 	}

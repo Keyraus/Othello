@@ -5,7 +5,7 @@ Board* Board_Init() {
 
 	board->grid[4][4] = BLACK;
 	board->grid[4][5] = WHITE;
-	board->grid[5][4] = WHITE;
+	board->grid[5][4] = BLACK;//
 	board->grid[5][5] = BLACK;
 
 	
@@ -162,4 +162,9 @@ int Board_changeGain(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 		}
 	}
 	return 0;
+}
+
+
+void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* textures[6], Pawn winnerColor, int pawns[3]) {
+	printf("youhou");
 }
