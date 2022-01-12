@@ -14,13 +14,15 @@ int main(int argc, char** argv)
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
-	SDL_Texture* texture[5] = {NULL};
-	SDL_Surface* image[5] = {
+	SDL_Texture* texture[6] = {NULL};
+	SDL_Surface* image[6] = {
 		IMG_Load("images/board.png"),
 		IMG_Load("images/black.png"),
 		IMG_Load("images/white.png"),
 		IMG_Load("images/num.png"),
-		IMG_Load("images/num.png")
+		IMG_Load("images/num.png"),
+		IMG_Load("images/winner.png"),
+		
 	};
 
 	SDL_Rect pos;
@@ -80,7 +82,7 @@ int main(int argc, char** argv)
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 6; ++i) {
 		texture[i] = SDL_CreateTextureFromSurface(renderer, image[i]);
 		SDL_FreeSurface(image[i]);
 	}
@@ -192,7 +194,18 @@ int main(int argc, char** argv)
 					numpos.y = 100 * y + 25;
 					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
 				}
-		
+		if (flaaaaaaaaaag) {
+			pos.h = 600;
+			pos.w = 600;
+			pos.x = 200;
+			pos.y = 200;
+			SDL_RenderCopy(renderer, texture[5], NULL, &pos);
+			pos.h = 200;
+			pos.w = 200;
+			pos.x = 300;
+			pos.y = 300;
+			SDL_RenderCopy(renderer, texture[lastcolor], NULL, &pos);
+		}
 		SDL_RenderPresent(renderer);
 	}
 	SDL_DestroyRenderer(renderer);
