@@ -218,13 +218,13 @@ void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* texture[6],
 		SDL_RenderCopy(renderer, texture[winnerColor], NULL, &pos);
 		pos.h = 100;
 		pos.w = 100;
-		numrect.x = 500 * (pawns[winnerColor] - 1) / 10 % 5;
-		numrect.y = 500 * (pawns[winnerColor] / 10) / 5;
+		numrect.x = 500 * ( ((pawns[winnerColor] / 10)-1) % 6);
+		numrect.y = 500 * ((pawns[winnerColor] / 10) / 6);
 		numpos.x = 360;
-		numpos.y = 375;
+		numpos.y = 360;
 		SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
 
-		numrect.x = ((pawns[winnerColor] - 10 * (pawns[winnerColor] / 10)) - 1) % 5 * 500;
+		numrect.x = ((pawns[winnerColor] - 10 * (pawns[winnerColor] / 10)) - 1) % 6 * 500;
 		numrect.y = (pawns[winnerColor] - 10 * (pawns[winnerColor] / 10)) / 6 * 500;
 		numpos.x = 390;
 		numpos.y = 375;
