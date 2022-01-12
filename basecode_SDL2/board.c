@@ -55,7 +55,7 @@ int Board_addPawn(Board* board, int x, int y, Pawn pawn)
 			}
 		}
 	
-
+	Board_checkGain(board, pawn);
 	return total;
 }
 
