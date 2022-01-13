@@ -10,6 +10,7 @@ int Bot_doAFlip(Board* original, Pawn playedColor, int depth)
 	root->depth = depth;
 	root->max = true;
 	root->childs = calloc(childTabSize, sizeof(BotNode*));
+
 	assert(root->childs);
 
 	int i = 0;
@@ -43,6 +44,8 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 		BotNode* node = calloc(1, sizeof(BotNode));
 		assert(node);
 		parent->childs[tabPos] = node;
+		node->x = x;
+		node->y = y;
 		node->value = gain;
 		return gain;
 	}
@@ -78,8 +81,10 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 		}
 	}
 	node->value = node->childs[min_max]->value + gain;
-	node->childs[min_max]->x = x;
-	node->childs[min_max]->y = y;
+	node->x = x;
+	node->y = y;
+	//node->childs[min_max]->x = x;
+	//node->childs[min_max]->y = y;
 	return 0;
 }
 
