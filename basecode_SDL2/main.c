@@ -109,14 +109,14 @@ int main(int argc, char** argv)
 				pos.x /= 100;
 				pos.y /= 100;
 
-				if (!Board_getColor(board, pos.x, pos.y)) 
+				if (!Board_getColor(board, pos.x, pos.y)) //regarde si pas deja un pion sur cette case
 					if (Board_addPawn(board, pos.x, pos.y, lastcolor)) {
-						
+
 
 						//lastcolor = lastcolor % 2 + 1;
 						if (!Board_checkGain(board, lastcolor)) {
 							//lastcolor = lastcolor % 2 + 1;
-							if (!Board_checkGain(board, lastcolor)) {
+							if (!Board_checkGain(board, lastcolor + 1)) {
 								flaaaaaaaaaag = 1;
 								printf("né nififnit\n");
 								winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
@@ -128,6 +128,7 @@ int main(int argc, char** argv)
 							}
 						}
 						Bot_doAFlip(board, WHITE, 2);
+						printf("oh");
 					}
 						
 				
