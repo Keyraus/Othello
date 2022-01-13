@@ -61,9 +61,19 @@ int Board_addPawn(Board* board, int x, int y, Pawn pawn)
 
 void Board_setGain(Board* board, int value)
 {
-	for (int x = 0; x < 8; ++x)
-		for (int y = 0; y < 8; y++)
-			board->gain[x][y] = value;
+	int WEIGHTS[64] = {
+		4, -3, 2, 2, 2, 2, -3, 4,
+		-3, -4, -1, -1, -1, -1, -4, -3,
+		2, -1, 1, 0, 0, 1, -1, 2,
+		2, -1, 0, 1, 1, 0, -1, 2,
+		2, -1, 0, 1, 1, 0, -1, 2,
+		2, -1, 1, 0, 0, 1, -1, 2,
+		-3, -4, -1, -1, -1, -1, -4, -3,
+		4, -3, 2, 2, 2, 2, -3, 4 
+	};
+	for (int y = 0; y < 8; y++)
+		for (int x = 0; x < 8; ++x)
+			board->gain[x][y] = WEIGHTS[x+y];
 }
 
 Pawn Board_getColor(Board* board, int x, int y)
