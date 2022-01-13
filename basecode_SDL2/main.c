@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 					if (Board_addPawn(board, pos.x, pos.y, lastcolor)) {
 						
 
-						lastcolor = lastcolor % 2 + 1;
+						//lastcolor = lastcolor % 2 + 1;
 						if (!Board_checkGain(board, lastcolor)) {
 							lastcolor = lastcolor % 2 + 1;
 							if (!Board_checkGain(board, lastcolor)) {
