@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 
 						//lastcolor = lastcolor % 2 + 1;
 						if (!Board_checkGain(board, lastcolor)) {
-							lastcolor = lastcolor % 2 + 1;
+							//lastcolor = lastcolor % 2 + 1;
 							if (!Board_checkGain(board, lastcolor)) {
 								flaaaaaaaaaag = 1;
 								printf("né nififnit\n");
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
 									printf("Egalite\n");
 							}
 						}
-						Bot_doAFlip(board, lastcolor % 2 + 1, 2);
+						Bot_doAFlip(board, WHITE, 2);
 					}
 						
 				
