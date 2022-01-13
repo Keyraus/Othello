@@ -4,10 +4,10 @@ Board* Board_Init() {
 	Board* board = (Board*)calloc(1, sizeof(Board));
 	assert(board);
 
-	board->grid[4][4] = BLACK;
-	board->grid[4][5] = WHITE;
-	board->grid[5][4] = WHITE;//
-	board->grid[5][5] = BLACK;
+	board->grid[4][4] = WHITE;
+	board->grid[4][5] = BLACK;
+	board->grid[5][4] = BLACK;//
+	board->grid[5][5] = WHITE;
 
 	
 	Board_setGain(board, 0);
@@ -37,43 +37,58 @@ int Board_changeLine(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 	}
 }
 
-int Board_addPawn(Board* board, int x, int y, Pawn pawn)
+Pawn Board_addPawn(Board* board, int x, int y, Pawn pawn)
 {
-	x++;
-	y++;
-
 	int total = 0;
-	
-	for (int i = -1; i < 2; i++)
-		for (int j = -1; j < 2; j++)
+	if (!Board_getCountPlays(board))
+	{
+		pawn = pawn % 2 + 1;
+		Board_checkGain(board, pawn);
+		if (!Board_getCountPlays(board))
 		{
-			if (i == 0 && j == 0)
-				continue;
-			if (Board_changeLine(board, x + i - 1, y + j - 1, i, j, pawn) > 1) {
-				board->grid[x][y] = pawn;
-				++total;
+			return NONE;
+		}
+	}
+	else if (board->gain[x][y])
+	{
+		x++;
+		y++;
+		//printf("x:%d, y:%d\n", x, y);
+
+		for (int i = -1; i < 2; i++)
+			for (int j = -1; j < 2; j++)
+			{
+				if (i == 0 && j == 0)
+					continue;
+				if (Board_changeLine(board, x + i - 1, y + j - 1, i, j, pawn) > 1) {
+					board->grid[x][y] = pawn;
+					++total;
+				}
+			}
+		pawn = pawn % 2 + 1;
+		Board_checkGain(board, pawn);
+		if (!Board_getCountPlays(board))
+		{
+			pawn = pawn % 2 + 1;
+			Board_checkGain(board, pawn);
+			if (!Board_getCountPlays(board))
+			{
+				return NONE;
 			}
 		}
-	
+		
+	}
+
 	Board_checkGain(board, pawn);
-	return total;
+	return pawn;
 }
 
 void Board_setGain(Board* board, int value)
 {
-	int WEIGHTS[64] = {
-		4, -3, 2, 2, 2, 2, -3, 4,
-		-3, -4, -1, -1, -1, -1, -4, -3,
-		2, -1, 1, 0, 0, 1, -1, 2,
-		2, -1, 0, 1, 1, 0, -1, 2,
-		2, -1, 0, 1, 1, 0, -1, 2,
-		2, -1, 1, 0, 0, 1, -1, 2,
-		-3, -4, -1, -1, -1, -1, -4, -3,
-		4, -3, 2, 2, 2, 2, -3, 4 
-	};
+
 	for (int y = 0; y < 8; y++)
 		for (int x = 0; x < 8; ++x)
-			board->gain[x][y] = WEIGHTS[x+y];
+			board->gain[x][y] = value;
 }
 
 Pawn Board_getColor(Board* board, int x, int y)
@@ -189,7 +204,8 @@ void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* texture[6],
 	SDL_Rect pos = { 0,0,100,100 };
 	SDL_Rect numrect = { 0,0,500,500 };
 	SDL_Rect numpos = { 0,25,50,50 };
-
+	int numdix = 0;
+	int numunit = 0;
 	for (int x = 0; x < 8; x++) {
 		for (int y = 0; y < 8; y++)
 			if (Board_getColor(board, x, y)) {
@@ -228,15 +244,20 @@ void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* texture[6],
 		SDL_RenderCopy(renderer, texture[winnerColor], NULL, &pos);
 		pos.h = 100;
 		pos.w = 100;
-		numrect.x = 500 * ( ((pawns[winnerColor] / 10)-1) % 6);
-		numrect.y = 500 * ((pawns[winnerColor] / 10) / 6);
-		numpos.x = 360;
-		numpos.y = 360;
+		numdix = (pawns[winnerColor] / 10) - 1;
+		numunit = pawns[winnerColor] - (numdix + 1) * 10;
+
+
+
+		numrect.x = 500 * ( numdix % 6);
+		numrect.y = 500 * (numdix / 6);
+		numpos.x = 350;
+		numpos.y = 375;
 		SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
 
-		numrect.x = ((pawns[winnerColor] - 10 * (pawns[winnerColor] / 10)) - 1) % 6 * 500;
-		numrect.y = (pawns[winnerColor] - 10 * (pawns[winnerColor] / 10)) / 6 * 500;
-		numpos.x = 390;
+		numrect.x = numunit % 6 * 500;
+		numrect.y = (numunit-1) / 6 * 500;
+		numpos.x = 380;
 		numpos.y = 375;
 		SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
 	}

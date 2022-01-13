@@ -11,6 +11,7 @@ typedef struct BotNode_s
 	int depth;
 	bool max;
 
+	int childTabSize;
 	struct BotNode_s** childs;
 
 }BotNode;
@@ -23,6 +24,6 @@ typedef struct BoardPlay_s
 }BoardPlay;
 
 int Bot_doAFlip(Board* original, Pawn playedColor, int depth);
-int Bot_addChild(BotNode* parent, int x, int y);
+int Bot_addChild(BotNode* parent, int x, int y, int tabPos);
 BotNode* Bot_newNode(Board* toCopy, int depth, bool mode);
 void Bot_freeNode(BotNode* node);
