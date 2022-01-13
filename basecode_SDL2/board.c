@@ -37,26 +37,50 @@ int Board_changeLine(Board* board, int x, int y, int x_d, int y_d, Pawn color)
 	}
 }
 
-int Board_addPawn(Board* board, int x, int y, Pawn pawn)
+Pawn Board_addPawn(Board* board, int x, int y, Pawn pawn)
 {
-	x++;
-	y++;
-
 	int total = 0;
-	
-	for (int i = -1; i < 2; i++)
-		for (int j = -1; j < 2; j++)
+	if (!Board_getCountPlays(board))
+	{
+		pawn = pawn % 2 + 1;
+		Board_checkGain(board, pawn);
+		if (!Board_getCountPlays(board))
 		{
-			if (i == 0 && j == 0)
-				continue;
-			if (Board_changeLine(board, x + i - 1, y + j - 1, i, j, pawn) > 1) {
-				board->grid[x][y] = pawn;
-				++total;
+			return NONE;
+		}
+	}
+	else if (board->gain[x][y])
+	{
+		x++;
+		y++;
+		//printf("x:%d, y:%d\n", x, y);
+
+		for (int i = -1; i < 2; i++)
+			for (int j = -1; j < 2; j++)
+			{
+				if (i == 0 && j == 0)
+					continue;
+				if (Board_changeLine(board, x + i - 1, y + j - 1, i, j, pawn) > 1) {
+					board->grid[x][y] = pawn;
+					++total;
+				}
+			}
+		pawn = pawn % 2 + 1;
+		Board_checkGain(board, pawn);
+		if (!Board_getCountPlays(board))
+		{
+			pawn = pawn % 2 + 1;
+			Board_checkGain(board, pawn);
+			if (!Board_getCountPlays(board))
+			{
+				return NONE;
 			}
 		}
-	
+		
+	}
+
 	Board_checkGain(board, pawn);
-	return total;
+	return pawn;
 }
 
 void Board_setGain(Board* board, int value)

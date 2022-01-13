@@ -103,31 +103,33 @@ int main(int argc, char** argv)
 			case SDL_QUIT: 
 				quit = 1;
 				break;
-
+			case SDL_MOUSEBUTTONUP:
+				Bot_doAFlip(board, WHITE, 2);
+				break;
 			case SDL_MOUSEBUTTONDOWN:
 				SDL_GetMouseState(&pos.x, &pos.y);
 				pos.x /= 100;
 				pos.y /= 100;
 
-				if (!Board_getColor(board, pos.x, pos.y)) 
-					if (Board_addPawn(board, pos.x, pos.y, lastcolor)) {
+				
+					if (Board_addPawn(board, pos.x, pos.y, BLACK)==WHITE) {
+						
+						
+						//if (!Board_checkGain(board, lastcolor)) {
+						//	//lastcolor = lastcolor % 2 + 1;
+						//	if (!Board_checkGain(board, lastcolor)) {
+						//		flaaaaaaaaaag = 1;
+						//		printf("né nififnit\n");
+						//		winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
+						//		pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
+						//		if (winnerColor != NONE)
+						//			printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
+						//		else
+						//			printf("Egalite\n");
+						//	}
+						//}
 						
 
-						//lastcolor = lastcolor % 2 + 1;
-						if (!Board_checkGain(board, lastcolor)) {
-							//lastcolor = lastcolor % 2 + 1;
-							if (!Board_checkGain(board, lastcolor)) {
-								flaaaaaaaaaag = 1;
-								printf("né nififnit\n");
-								winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
-								pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
-								if (winnerColor != NONE)
-									printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
-								else
-									printf("Egalite\n");
-							}
-						}
-						Bot_doAFlip(board, WHITE, 2);
 					}
 						
 				
@@ -145,6 +147,7 @@ int main(int argc, char** argv)
 					break;
 
 				case SDLK_DOWN:
+					
 					break;
 
 				case SDLK_RIGHT:
