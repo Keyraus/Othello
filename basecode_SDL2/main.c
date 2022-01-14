@@ -11,6 +11,7 @@ enum ePosition
 
 int main(int argc, char** argv)
 {
+	TTF_Init();
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
@@ -196,6 +197,7 @@ int main(int argc, char** argv)
 		background.w = 300;
 		background.h = 100;
 		SDL_RenderCopy(renderer, texture[8], NULL, &background);
+
 
 		background.y = 100;
 
