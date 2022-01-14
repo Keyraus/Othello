@@ -200,14 +200,11 @@ int Board_getCountPlays(Board* board)
 
 void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* texture[6], Pawn winnerColor, int pawns[3], int flag) {
 	int num = 0;
-	TTF_Font* Sans = TTF_OpenFont("data/font.ttf", 50);
+	
 	SDL_Color White = { 255,255,255 };
 	SDL_Rect pos = { 0,0,100,100 };
 	SDL_Rect numrect = { 0,0,500,500 };
 	SDL_Rect numpos = { 0,25,50,50 };
-	SDL_Texture* number;
-	SDL_Surface* surfacenumber;
-	char numchar[3] = "00";
 	int numdix = 0;
 	int numunit = 0;
 	for (int x = 0; x < 8; x++) {
@@ -224,18 +221,15 @@ void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* texture[6],
 					numrect.y = 500;
 					numpos.x = 25 + 100 * x;
 					numpos.y = 25 + 100 * y;
-					numchar[0] = '1';
+					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);	
 					num -= 10;
 				}
-				numchar[1] = num + '0';
 				numrect.x = (num - 1) % 5 * 500;
 				numrect.y = num / 6 * 500;
 				numpos.x = 100 * x + 40;
 				numpos.y = 100 * y + 25;
-				surfacenumber = TTF_RenderText_Solid(Sans, numchar, White);
-				number = SDL_CreateTextureFromSurface(renderer, surfacenumber);
-				SDL_RenderCopy(renderer, number, &numrect, &numpos);
-				//SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+				SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
+
 			}
 	}
 	if (flag) {
