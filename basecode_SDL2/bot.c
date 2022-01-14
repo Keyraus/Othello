@@ -1,4 +1,5 @@
 #include "bot.h"
+//#include "vld.h"
 
 const int WEIGHTS[8][8] = {
 {4, -3, 2, 2, 2, 2, -3, 4},
@@ -16,6 +17,13 @@ int Bot_doAFlip(Board* original, Pawn playedColor, int depth)
 	int endFlag = 0;
 	BotNode* root = Bot_newNode(original, depth-1, true);
 	root->childTabSize = Board_getCountPlays(original);
+
+	if (!root->childTabSize)
+	{
+		free(root->actualGame);
+		Bot_freeNode(root);
+		return 1;
+	}
 
 	root->playedColor = playedColor;
 
@@ -41,12 +49,8 @@ int Bot_doAFlip(Board* original, Pawn playedColor, int depth)
 	if (!Board_addPawn(original, root->childs[max]->x, root->childs[max]->y, playedColor))
 		endFlag = 1;
 
-	for (int j = 0; j < root->childTabSize; j++)
-	{
-		Bot_freeNode(root->childs[j]);
-	}
-	free(root->actualGame);
-	free(root);
+	Bot_freeNode(root);
+
 	return endFlag;
 }
 
@@ -104,6 +108,15 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 		}
 	}
 	node->value = node->childs[min_max]->value + gain;
+	for (int j = 0; j < node->childTabSize; j++)
+	{
+		Bot_freeNode(node->childs[j]);
+	}
+	free(node->childs);
+	free(node->actualGame);
+	node->childTabSize = 0;
+	
+
 	node->x = x;
 	node->y = y;
 	
@@ -132,16 +145,15 @@ void Bot_freeNode(BotNode* node)
 	int nbchild = 0;
 	if (node) {
 		nbchild = node->childTabSize;
-		if (!nbchild)
+		if (nbchild)
 		{
-			if(node->childs)
-				Bot_freeNode(node->childs[0]);
+			free(node->actualGame);
+			for (int i = 0; i < nbchild; i++)
+			{
+				Bot_freeNode(node->childs[i]);
+			}
+			free(node->childs);
 		}
-		for (int i = 0; i < nbchild; i++)
-		{
-			Bot_freeNode(node->childs[i]);
-		}
-		free(node->actualGame);
 	}
 	
 	free(node);
