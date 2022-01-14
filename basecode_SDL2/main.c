@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 	SDL_Surface* image[6] = {
 		IMG_Load("images/board.jpg"),
 		IMG_Load("images/black.png"),
-		IMG_Load("images/white.jpg"),
+		IMG_Load("images/white.png"),
 		IMG_Load("images/num.png"),
 		IMG_Load("images/num.png"),
 		IMG_Load("images/winner.png"),
@@ -109,27 +109,24 @@ int main(int argc, char** argv)
 				quit = 1;
 				break;
 			case SDL_MOUSEBUTTONUP:
-				if (Bot_doAFlip(board, WHITE, 5)) {
-					flaaaaaaaaaag = 1;
-					printf("né nififnit\n");
-					winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
-					pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
-					if (winnerColor != NONE)
-						printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
-					else
-						printf("Egalite\n");
-				}
+				//if (Bot_doAFlip(board, WHITE, 5)) {
+				//	flaaaaaaaaaag = 1;
+				//	printf("né nififnit\n");
+				//	winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
+				//	pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
+				//	if (winnerColor != NONE)
+				//		printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
+				//	else
+				//		printf("Egalite\n");
+				//}
 				break;
-			case SDL_MOUSEBUTTONDOWN:/*
+			case SDL_MOUSEBUTTONDOWN:
 				SDL_GetMouseState(&pos.x, &pos.y);
 				pos.x /= 100;
 				pos.y /= 100;
-				Board_addPawn(board, pos.x, pos.y, BLACK);*/
-				while (!Bot_doAFlip(board, BLACK, 4))
-					if (Bot_doAFlip(board, WHITE, 4))
-						break;
-					
-				flaaaaaaaaaag = 1;
+				
+				Board_addPawn(board, pos.x, pos.y, BLACK);
+				
 				break;
 
 			case SDL_KEYDOWN:
@@ -138,6 +135,13 @@ int main(int argc, char** argv)
 				case SDLK_ESCAPE:
 					quit = 1;
 					break;
+				case SDLK_SPACE:
+					//Bot_doAFlip(board, BLACK, 1);
+					Bot_doAFlip(board, WHITE, 2);
+					break;
+				
+
+					
 				}
 				break;
 

@@ -14,13 +14,10 @@ const int WEIGHTS[8][8] = {
 int Bot_doAFlip(Board* original, Pawn playedColor, int depth)
 {
 	int endFlag = 0;
-	BotNode* root = Bot_newNode(original, depth, true);
+	BotNode* root = Bot_newNode(original, depth-1, true);
 	root->childTabSize = Board_getCountPlays(original);
 
-	root->actualGame = original;
 	root->playedColor = playedColor;
-	root->depth = depth;
-	root->max = true;
 
 	root->childs = calloc(root->childTabSize, sizeof(BotNode*));
 	assert(root->childs);
@@ -68,16 +65,14 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 		node->value = gain ;
 		return 0;
 	}
-	//TODO CALCULER SI AUCUNES POSSIBILITEs
-	//comment on fait ? stp moi je sais pas en fait
+
 	BotNode* node = Bot_newNode(parent->actualGame, parent->depth-1, !parent->max);
 	parent->childs[tabPos] = node;
 	node->playedColor = Board_addPawn(node->actualGame, x, y, parent->playedColor);
-	node->childTabSize = Board_getCountPlays(node->actualGame);
 	
 	if (node->playedColor == parent->playedColor)//si ne peu pas jouer 1 fois
 	{
-		//rien ?
+		node->max = !node->max;
 	}
 	
 	if (!node->playedColor)// si partie terminer
@@ -86,11 +81,14 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 		return 0;
 	}
 
+	node->childTabSize = Board_getCountPlays(node->actualGame);
+
 	node->childs = calloc(node->childTabSize, sizeof(BotNode*));
 	assert(node->childs);
 
-	int i = 0;
+  	int i = 0;
 	for (int y = 0; y < 8; ++y)
+
 		for (int x = 0; x < 8; x++)
 			if (node->actualGame->gain[x][y])
 			{
@@ -108,8 +106,6 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 	node->value = node->childs[min_max]->value + gain;
 	node->x = x;
 	node->y = y;
-	//node->childs[min_max]->x = x;
-	//node->childs[min_max]->y = y;
 	
 	return 0;
 }
