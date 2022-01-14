@@ -1,5 +1,1 @@
-# Othello
-Yo Texier ça fait plaiz de voir que tu lit ça
-bon
-finalement comme tu peu le voir On Est Trop CHAUD
-
+Un projet d'Othello qui a été très intéressant a faire pour les cours
