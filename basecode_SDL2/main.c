@@ -130,16 +130,18 @@ int main(int argc, char** argv)
 				quit = 1;
 				break;
 			case SDL_MOUSEBUTTONUP:
-				//if (Bot_doAFlip(board, WHITE, 5)) {
-				//	flaaaaaaaaaag = 1;
-				//	printf("né nififnit\n");
-				//	winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
-				//	pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
-				//	if (winnerColor != NONE)
-				//		printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
-				//	else
-				//		printf("Egalite\n");
-				//}
+
+				if (Bot_doAFlip(board, WHITE, 5)) {
+					flaaaaaaaaaag = 1;
+					printf("né nififnit\n");
+					winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
+					pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
+					if (winnerColor != NONE)
+						printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
+				
+					else
+						printf("Egalite\n");
+				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				SDL_GetMouseState(&pos.x, &pos.y);
@@ -159,7 +161,7 @@ int main(int argc, char** argv)
 					break;
 				case SDLK_SPACE:
 					//Bot_doAFlip(board, BLACK, 1);
-					Bot_doAFlip(board, WHITE, 2);
+					
 					break;
 				
 
@@ -180,7 +182,7 @@ int main(int argc, char** argv)
 		background.w = 800;
 		background.h = 800;
 		SDL_RenderCopy(renderer, texture[0], NULL, &background);
-		SDL_RenderCopy(renderer, Message, NULL, NULL);
+		//SDL_RenderCopy(renderer, Message, NULL, NULL);
 		
 		SDL_GetMouseState(&pos2.x, &pos2.y);
 		pos2.x = (pos2.x) / 100 * 100 ;
