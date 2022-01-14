@@ -109,6 +109,7 @@ int main(int argc, char** argv)
 				quit = 1;
 				break;
 			case SDL_MOUSEBUTTONUP:
+				Bot_doAFlip(board, WHITE, 5);
 				//if (Bot_doAFlip(board, WHITE, 5)) {
 				//	flaaaaaaaaaag = 1;
 				//	printf("né nififnit\n");
@@ -121,11 +122,12 @@ int main(int argc, char** argv)
 				//}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				SDL_GetMouseState(&pos.x, &pos.y);
-				pos.x /= 100;
-				pos.y /= 100;
-				
-				Board_addPawn(board, pos.x, pos.y, BLACK);
+				Bot_doAFlip(board, BLACK, 4);
+				//SDL_GetMouseState(&pos.x, &pos.y);
+				//pos.x /= 100;
+				//pos.y /= 100;
+				//
+				//Board_addPawn(board, pos.x, pos.y, BLACK);
 				
 				break;
 
@@ -137,7 +139,7 @@ int main(int argc, char** argv)
 					break;
 				case SDLK_SPACE:
 					//Bot_doAFlip(board, BLACK, 1);
-					Bot_doAFlip(board, WHITE, 2);
+					
 					break;
 				
 
@@ -164,7 +166,7 @@ int main(int argc, char** argv)
 		
 		SDL_RenderPresent(renderer);
 	}
-
+	free(board);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
