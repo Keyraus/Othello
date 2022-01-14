@@ -125,8 +125,11 @@ int main(int argc, char** argv)
 				pos.x /= 100;
 				pos.y /= 100;
 				Board_addPawn(board, pos.x, pos.y, BLACK);*/
-				while (!Bot_doAFlip(board, BLACK, 6))
-					Bot_doAFlip(board, WHITE, 6);
+				while (!Bot_doAFlip(board, BLACK, 4))
+					if (Bot_doAFlip(board, WHITE, 4))
+						break;
+					
+				flaaaaaaaaaag = 1;
 				break;
 
 			case SDL_KEYDOWN:
