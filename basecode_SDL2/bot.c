@@ -50,7 +50,7 @@ int Bot_doAFlip(Board* original, Pawn playedColor, int depth)
 		endFlag = 1;
 
 	Bot_freeNode(root);
-
+	
 	return endFlag;
 }
 
@@ -81,6 +81,8 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 	
 	if (!node->playedColor)// si partie terminer
 	{
+		node->x = x;
+		node->y = y;
 		node->value = gain;
 		return 0;
 	}

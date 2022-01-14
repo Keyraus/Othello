@@ -131,9 +131,9 @@ int main(int argc, char** argv)
 				break;
 			case SDL_MOUSEBUTTONUP:
 
-				if (Bot_doAFlip(board, WHITE, 5)) {
+				if (Bot_doAFlip(board, WHITE, 1)) {
 					flaaaaaaaaaag = 1;
-					printf("né nififnit\n");
+					printf("né nififnit\n");	
 					winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
 					pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
 					if (winnerColor != NONE)
@@ -148,9 +148,6 @@ int main(int argc, char** argv)
 				pos.x /= 100;
 				pos.y /= 100;
 				Board_addPawn(board, pos.x, pos.y, BLACK);
-				break;
-
-				flaaaaaaaaaag = 1;
 				break;
 
 			case SDL_KEYDOWN:
@@ -200,7 +197,6 @@ int main(int argc, char** argv)
 		background.h = 100;
 		SDL_RenderCopy(renderer, texture[8], NULL, &background);
 
-
 		background.y = 100;
 
 		SDL_SetTextureBlendMode(texture[6], SDL_BLENDMODE_BLEND);
@@ -220,13 +216,6 @@ int main(int argc, char** argv)
 			SDL_SetTextureAlphaMod(texture[7], 100);
 		SDL_RenderCopy(renderer, texture[7], NULL, &background);
 
-		
-
-		
-		
-			
-		
-			
 		Board_render(board, renderer, texture, winnerColor, pawns,flaaaaaaaaaag);
 		
 		SDL_RenderPresent(renderer);
