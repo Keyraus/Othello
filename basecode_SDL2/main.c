@@ -101,16 +101,8 @@ int main(int argc, char** argv)
 
 	TTF_Font* Sans = TTF_OpenFont("data/font.ttf", 10);
 
-	// this is the color in rgb format,
-	// maxing out all would give you the color white,
-	// and it will be your text's color
-	SDL_Color White = { 0, 0, 0 };
-
-	// as TTF_RenderText_Solid could only be used on
-	// SDL_Surface then you have to create the surface first
+	SDL_Color White = { 255,255,255};
 	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "coucou", White);
-
-
 	SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -160,9 +152,6 @@ int main(int argc, char** argv)
 					//Bot_doAFlip(board, BLACK, 1);
 					
 					break;
-				
-
-					
 				}
 				break;
 
