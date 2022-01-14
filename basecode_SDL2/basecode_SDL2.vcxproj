@@ -111,7 +111,7 @@ xcopy /I /Y "$(SolutionDir)basecode_SDL2\data" "$(SolutionDir)bin\data\"</Comman
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>../librairies/SDL2-2.0.6/lib/$(Platform)/SDL2.lib;../librairies/SDL2-2.0.6/lib/$(Platform)/SDL2main.lib;../librairies/SDL2-2.0.6/lib/$(Platform)/SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../librairies/SDL2-2.0.6/lib/$(Platform)/SDL2.lib;../librairies/SDL2-2.0.6/lib/$(Platform)/SDL2main.lib;../librairies/SDL2-2.0.6/lib/$(Platform)/SDL2_image.lib;../librairies/SDL2-2.0.6/lib/$(Platform)/SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(SolutionDir)librairies\SDL2-2.0.6\bin\x64\*.dll" "$(SolutionDir)bin\x64\"

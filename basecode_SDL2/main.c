@@ -11,18 +11,26 @@ enum ePosition
 
 int main(int argc, char** argv)
 {
+	TTF_Init();
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
-	SDL_Texture* texture[6] = {NULL};
-	SDL_Surface* image[6] = {
+	SDL_Texture* texture[9]= {NULL};
+	SDL_Surface* image[9] = {
 		IMG_Load("images/board.jpg"),
 		IMG_Load("images/black.png"),
 		IMG_Load("images/white.png"),
 		IMG_Load("images/num.png"),
 		IMG_Load("images/num.png"),
 		IMG_Load("images/winner.png"),
+		IMG_Load("images/jcj.png"),
+		IMG_Load("images/jvia.png"),
+		IMG_Load("images/o.png")
+
 	};
+	
+
+	
 
 	SDL_Rect pos;
 	SDL_Rect pos2;
@@ -74,7 +82,7 @@ int main(int argc, char** argv)
 
 	window = SDL_CreateWindow("Ma fenetre SDL",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
-		1000, 800, 
+		1100, 800, 
 		SDL_WINDOW_SHOWN
 	);
 
@@ -86,13 +94,26 @@ int main(int argc, char** argv)
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-	for (int i = 0; i < 6; ++i) {
+	for (int i = 0; i < 9; ++i) {
 		texture[i] = SDL_CreateTextureFromSurface(renderer, image[i]);
 		SDL_FreeSurface(image[i]);
 	}
-		
 
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	TTF_Font* Sans = TTF_OpenFont("data/font.ttf", 10);
+
+	// this is the color in rgb format,
+	// maxing out all would give you the color white,
+	// and it will be your text's color
+	SDL_Color White = { 0, 0, 0 };
+
+	// as TTF_RenderText_Solid could only be used on
+	// SDL_Surface then you have to create the surface first
+	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "coucou", White);
+
+
+	SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
 	int lastcolor = BLACK;
 	Pawn winnerColor = 0;
@@ -122,13 +143,13 @@ int main(int argc, char** argv)
 				//}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				Bot_doAFlip(board, BLACK, 4);
-				//SDL_GetMouseState(&pos.x, &pos.y);
-				//pos.x /= 100;
-				//pos.y /= 100;
-				//
-				//Board_addPawn(board, pos.x, pos.y, BLACK);
-				
+				SDL_GetMouseState(&pos.x, &pos.y);
+				pos.x /= 100;
+				pos.y /= 100;
+				Board_addPawn(board, pos.x, pos.y, BLACK);
+				break;
+
+				flaaaaaaaaaag = 1;
 				break;
 
 			case SDL_KEYDOWN:
@@ -155,13 +176,56 @@ int main(int argc, char** argv)
 		SDL_RenderClear(renderer);
 
 		// background
-
+		background.x = 0;
+		background.y = 0;
+		background.w = 800;
+		background.h = 800;
 		SDL_RenderCopy(renderer, texture[0], NULL, &background);
+		SDL_RenderCopy(renderer, Message, NULL, NULL);
+		
 		SDL_GetMouseState(&pos2.x, &pos2.y);
 		pos2.x = (pos2.x) / 100 * 100 ;
 		pos2.y = (pos2.y)/ 100 * 100 ;
 		// pyon ki flot avek la souri
-		SDL_RenderCopy(renderer, texture[lastcolor], NULL, &pos2);
+		if (pos2.x < 800) {
+			SDL_SetTextureBlendMode(texture[lastcolor], SDL_BLENDMODE_BLEND);
+			SDL_SetTextureAlphaMod(texture[lastcolor], 100);
+			SDL_RenderCopy(renderer, texture[lastcolor], NULL, &pos2);
+			SDL_SetTextureAlphaMod(texture[lastcolor], 255);
+		}
+		background.x = 800;
+		background.y = 0;
+		background.w = 300;
+		background.h = 100;
+		SDL_RenderCopy(renderer, texture[8], NULL, &background);
+
+
+		background.y = 100;
+
+		SDL_SetTextureBlendMode(texture[6], SDL_BLENDMODE_BLEND);
+		
+		if (pos2.y == 100 && pos2.x > 800)
+			SDL_SetTextureAlphaMod(texture[6], 255);
+		else
+			SDL_SetTextureAlphaMod(texture[6], 100);
+		SDL_RenderCopy(renderer, texture[6], NULL, &background);
+		background.y = 200;
+		
+		SDL_SetTextureBlendMode(texture[7], SDL_BLENDMODE_BLEND);
+		
+		if (pos2.y == 200 && pos2.x > 700)
+			SDL_SetTextureAlphaMod(texture[7], 255);
+		else
+			SDL_SetTextureAlphaMod(texture[7], 100);
+		SDL_RenderCopy(renderer, texture[7], NULL, &background);
+
+		
+
+		
+		
+			
+		
+			
 		Board_render(board, renderer, texture, winnerColor, pawns,flaaaaaaaaaag);
 		
 		SDL_RenderPresent(renderer);
