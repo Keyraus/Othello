@@ -54,7 +54,7 @@ int Bot_doAFlip(Board* original, Pawn playedColor, int depth)
 	return endFlag;
 }
 
-int Bot_addChild(BotNode* parent, int x, int y, int tabPos) 
+int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 {
 
 	int mode = (1 + -2 * (parent->max));//l'inverse du parent
@@ -66,25 +66,25 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 		parent->childs[tabPos] = node;
 		node->x = x;
 		node->y = y;
-		node->value = gain ;
-		return 0;
+		node->value = gain;
+		return gain;
 	}
 
-	BotNode* node = Bot_newNode(parent->actualGame, parent->depth-1, !parent->max);
+	BotNode* node = Bot_newNode(parent->actualGame, parent->depth - 1, !parent->max);
 	parent->childs[tabPos] = node;
 	node->playedColor = Board_addPawn(node->actualGame, x, y, parent->playedColor);
-	
+
 	if (node->playedColor == parent->playedColor)//si ne peu pas jouer 1 fois
 	{
 		node->max = !node->max;
 	}
-	
+
 	if (!node->playedColor)// si partie terminer
 	{
 		node->x = x;
 		node->y = y;
 		node->value = gain;
-		return 0;
+		return gain;
 	}
 
 	node->childTabSize = Board_getCountPlays(node->actualGame);
@@ -92,24 +92,46 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 	node->childs = calloc(node->childTabSize, sizeof(BotNode*));
 	assert(node->childs);
 
-  	int i = 0;
-	for (int y = 0; y < 8; ++y)
 
+
+	int i = 0;
+	for (int y = 0; y < 8; ++y){
 		for (int x = 0; x < 8; x++)
 			if (node->actualGame->gain[x][y])
 			{
-				Bot_addChild(node, x, y, i++);
-				
+				if (i == 0 || tabPos == 0)
+				{
+					node->value = gain + Bot_addChild(node, x, y, i++);
+				}
+				else {
+
+					if (node->value * mode * -1 > parent->value * mode * -1)
+					{
+						int toCheck = gain + Bot_addChild(node, x, y, i++);
+						if (toCheck * mode > node->value * mode)
+						{
+							node->value = toCheck;
+						}
+					}
+					else {
+						y = 8;
+						break;
+					}
+				}
 			}
-	int min_max = 0;
-	for (int j = 0; j < node->childTabSize; j++)
-	{
-		if (node->childs[j]->value * mode > node->childs[min_max]->value * mode)
-		{
-			min_max = j;
-		}
 	}
-	node->value = node->childs[min_max]->value + gain;
+	//int min_max = 0;
+	//for (int j = 0; j < node->childTabSize; j++)
+	//{
+	//	if (node->childs[j]->value * mode > node->childs[min_max]->value * mode)
+	//	{
+	//		min_max = j;
+	//	}
+	//}
+
+
+
+	//node->value = node->childs[min_max]->value + gain;
 	for (int j = 0; j < node->childTabSize; j++)
 	{
 		Bot_freeNode(node->childs[j]);
@@ -122,7 +144,7 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 	node->x = x;
 	node->y = y;
 	
-	return 0;
+	return node->value;
 }
 
 BotNode* Bot_newNode(Board* toCopy, int depth, bool mode)

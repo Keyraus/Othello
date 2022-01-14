@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 				break;
 			case SDL_MOUSEBUTTONUP:
 
-				if (Bot_doAFlip(board, WHITE, 1)) {
+				if (Bot_doAFlip(board, WHITE, 8)) {
 					flaaaaaaaaaag = 1;
 					printf("né nififnit\n");	
 					winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
