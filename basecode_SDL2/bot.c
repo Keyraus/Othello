@@ -1,5 +1,5 @@
 #include "bot.h"
-//#include "vld.h"
+#include "vld.h"
 
 const int WEIGHTS[8][8] = {
 {4, -3, 2, 2, 2, 2, -3, 4},
@@ -84,6 +84,7 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 		node->x = x;
 		node->y = y;
 		node->value = gain;
+		free(node->actualGame);
 		return gain;
 	}
 
@@ -95,26 +96,26 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 
 
 	int i = 0;
-	for (int y = 0; y < 8; ++y){
-		for (int x = 0; x < 8; x++)
-			if (node->actualGame->gain[x][y])
+	for (int y_d = 0; y_d < 8; ++y_d){
+		for (int x_d = 0; x_d < 8; x_d++)	//balayage du plateau
+			if (node->actualGame->gain[x_d][y_d]) // on trouve une case sur laquel on peu jouer
 			{
-				if (i == 0 || tabPos == 0)
+				if (i == 0 || tabPos == 0)	//si on est sur la branche de gauche (obliger de la calculé)
 				{
-					node->value = gain + Bot_addChild(node, x, y, i++);
+					node->value = gain + Bot_addChild(node, x_d, y_d, i++);	//on fait remonter la veleur calculer dans le noeud
 				}
 				else {
 
-					if (node->value * mode * -1 > parent->value * mode * -1)
+					if (node->value * mode * -1 > parent->value * mode * -1)	//élagage alpha béta ("mode" varie entre -1 et 1)
 					{
-						int toCheck = gain + Bot_addChild(node, x, y, i++);
-						if (toCheck * mode > node->value * mode)
+						int toCheck = gain + Bot_addChild(node, x_d, y_d, i++);
+						if (toCheck * mode > node->value * mode)//on regarde si c'est la valeur max/min 
 						{
-							node->value = toCheck;
+							node->value = toCheck;//on change si oui
 						}
 					}
 					else {
-						y = 8;
+						y_d = 8;
 						break;
 					}
 				}
@@ -132,12 +133,15 @@ int Bot_addChild(BotNode* parent, int x, int y, int tabPos)
 
 
 	//node->value = node->childs[min_max]->value + gain;
+
+
+	free(node->actualGame);
+
 	for (int j = 0; j < node->childTabSize; j++)
 	{
 		Bot_freeNode(node->childs[j]);
 	}
 	free(node->childs);
-	free(node->actualGame);
 	node->childTabSize = 0;
 	
 
