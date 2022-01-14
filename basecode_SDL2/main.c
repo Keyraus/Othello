@@ -129,16 +129,16 @@ int main(int argc, char** argv)
 				quit = 1;
 				break;
 			case SDL_MOUSEBUTTONUP:
-				if (Bot_doAFlip(board, WHITE, 5)) {
-					flaaaaaaaaaag = 1;
-					printf("né nififnit\n");
-					winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
-					pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
-					if (winnerColor != NONE)
-						printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
-					else
-						printf("Egalite\n");
-				}
+				//if (Bot_doAFlip(board, WHITE, 5)) {
+				//	flaaaaaaaaaag = 1;
+				//	printf("né nififnit\n");
+				//	winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
+				//	pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
+				//	if (winnerColor != NONE)
+				//		printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
+				//	else
+				//		printf("Egalite\n");
+				//}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				SDL_GetMouseState(&pos.x, &pos.y);
@@ -147,12 +147,22 @@ int main(int argc, char** argv)
 				Board_addPawn(board, pos.x, pos.y, BLACK);
 				break;
 
+				flaaaaaaaaaag = 1;
+				break;
+
 			case SDL_KEYDOWN:
 				switch (e.key.keysym.sym)
 				{
 				case SDLK_ESCAPE:
 					quit = 1;
 					break;
+				case SDLK_SPACE:
+					//Bot_doAFlip(board, BLACK, 1);
+					Bot_doAFlip(board, WHITE, 2);
+					break;
+				
+
+					
 				}
 				break;
 
