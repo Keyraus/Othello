@@ -63,6 +63,7 @@ int main(int argc, char** argv)
 	SDL_Event e;
 	int quit = 0;
 	int num = 0;
+	int buttonison = 0;
 	int flaaaaaaaaaag = 0;
 	int pawns[3] = {0};
 	if (!SDL_WasInit(SDL_INIT_VIDEO))
@@ -122,24 +123,34 @@ int main(int argc, char** argv)
 				quit = 1;
 				break;
 			case SDL_MOUSEBUTTONUP:
-
-				if (Bot_doAFlip(board, WHITE, 8)) {
-					flaaaaaaaaaag = 1;
-					printf("né nififnit\n");	
-					winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
-					pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
-					if (winnerColor != NONE)
-						printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
+				if (buttonison)
+					if (Bot_doAFlip(board, WHITE, 8)) {
+						flaaaaaaaaaag = 1;
+						printf("né nififnit\n");	
+						winnerColor = Board_countPieces(board, &pawns[WHITE], &pawns[BLACK], &pawns[NONE]);
+						pawns[winnerColor] = pawns[winnerColor] + pawns[NONE];
+						if (winnerColor != NONE)
+							printf("Le gagnant gagne avec : %d points\n", pawns[winnerColor]);
 				
-					else
-						printf("Egalite\n");
-				}
+						else
+							printf("Egalite\n");
+					}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				SDL_GetMouseState(&pos.x, &pos.y);
 				pos.x /= 100;
 				pos.y /= 100;
-				Board_addPawn(board, pos.x, pos.y, BLACK);
+				if (pos2.y == 100 && pos2.x > 800)
+					buttonison = 0;
+				else if (pos2.y == 200 && pos2.x > 800)
+					buttonison = 1;
+				if (!buttonison)
+					lastcolor = Board_addPawn(board, pos.x, pos.y, lastcolor);
+				else {
+					Board_addPawn(board, pos.x, pos.y, BLACK);
+					lastcolor = BLACK;
+				}
+					
 				break;
 
 			case SDL_KEYDOWN:
@@ -190,8 +201,10 @@ int main(int argc, char** argv)
 
 		SDL_SetTextureBlendMode(texture[6], SDL_BLENDMODE_BLEND);
 		
-		if (pos2.y == 100 && pos2.x > 800)
+		if ((pos2.y == 100 && pos2.x > 700) || !buttonison) {
 			SDL_SetTextureAlphaMod(texture[6], 255);
+		}
+			
 		else
 			SDL_SetTextureAlphaMod(texture[6], 100);
 		SDL_RenderCopy(renderer, texture[6], NULL, &background);
@@ -199,7 +212,7 @@ int main(int argc, char** argv)
 		
 		SDL_SetTextureBlendMode(texture[7], SDL_BLENDMODE_BLEND);
 		
-		if (pos2.y == 200 && pos2.x > 700)
+		if ((pos2.y == 200 && pos2.x > 700) || buttonison)
 			SDL_SetTextureAlphaMod(texture[7], 255);
 		else
 			SDL_SetTextureAlphaMod(texture[7], 100);

@@ -202,8 +202,8 @@ void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* texture[6],
 	int num = 0;
 	
 	SDL_Color White = { 255,255,255 };
-	SDL_Rect pos = { 0,0,100,100 };
-	SDL_Rect numrect = { 0,0,500,500 };
+	SDL_Rect pos = { 0,0,105,105 };
+	SDL_Rect numrect = { 0,0,200,225 };
 	SDL_Rect numpos = { 0,25,50,50 };
 	int numdix = 0;
 	int numunit = 0;
@@ -217,15 +217,15 @@ void Board_render(Board* board, SDL_Renderer* renderer, SDL_Texture* texture[6],
 			else if (board->gain[x][y]) {
 				num = board->gain[x][y];
 				if (num / 10 > 0) {
-					numrect.x = 500;
-					numrect.y = 500;
+					numrect.x = numrect.w;
+					numrect.y = (num / 6) * numrect.h;
 					numpos.x = 25 + 100 * x;
 					numpos.y = 25 + 100 * y;
 					SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);	
 					num -= 10;
 				}
-				numrect.x = (num - 1) % 5 * 500;
-				numrect.y = num / 6 * 500;
+				numrect.x = num % 5 * numrect.w;
+				numrect.y = (num / 6) * numrect.h;
 				numpos.x = 100 * x + 40;
 				numpos.y = 100 * y + 25;
 				SDL_RenderCopy(renderer, texture[3], &numrect, &numpos);
