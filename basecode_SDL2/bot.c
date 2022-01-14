@@ -1,7 +1,19 @@
 #include "bot.h"
 
+const int WEIGHTS[8][8] = {
+{4, -3, 2, 2, 2, 2, -3, 4},
+{-3, -4, -1, -1, -1, -1, -4, -3},
+{2, -1, 1, 0, 0, 1, -1, 2},
+{2, -1, 0, 1, 1, 0, -1, 2},
+{2, -1, 0, 1, 1, 0, -1, 2},
+{2, -1, 1, 0, 0, 1, -1, 2},
+{-3, -4, -1, -1, -1, -1, -4, -3},
+{4, -3, 2, 2, 2, 2, -3, 4}
+};
+
 int Bot_doAFlip(Board* original, Pawn playedColor, int depth)
 {
+	int endFlag = 0;
 	BotNode* root = Bot_newNode(original, depth, true);
 	root->childTabSize = Board_getCountPlays(original);
 
@@ -29,31 +41,21 @@ int Bot_doAFlip(Board* original, Pawn playedColor, int depth)
 			max = j;
 		}
 	}
-	if (root->childTabSize)
-		Board_addPawn(original, root->childs[max]->x, root->childs[max]->y, playedColor);
-	else
-		return 1;
+	if (!Board_addPawn(original, root->childs[max]->x, root->childs[max]->y, playedColor))
+		endFlag = 1;
 
 	for (int j = 0; j < root->childTabSize; j++)
 	{
 		Bot_freeNode(root->childs[j]);
 	}
+	free(root->actualGame);
 	free(root);
-	return 0;
+	return endFlag;
 }
 
 int Bot_addChild(BotNode* parent, int x, int y, int tabPos) 
 {
-	int WEIGHTS[8][8] = {
-	{4, -3, 2, 2, 2, 2, -3, 4},
-	{-3, -4, -1, -1, -1, -1, -4, -3},
-	{2, -1, 1, 0, 0, 1, -1, 2},
-	{2, -1, 0, 1, 1, 0, -1, 2},
-	{2, -1, 0, 1, 1, 0, -1, 2},
-	{2, -1, 1, 0, 0, 1, -1, 2},
-	{-3, -4, -1, -1, -1, -1, -4, -3},
-	{4, -3, 2, 2, 2, 2, -3, 4}
-	};
+
 	int mode = (1 + -2 * (parent->max));//l'inverse du parent
 	int gain = (parent->actualGame->gain[x][y] + WEIGHTS[x][y]) * mode * -1;// -1 = min et 1 = max
 	if (!parent->depth) // si pas de profondeur

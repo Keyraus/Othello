@@ -6,7 +6,7 @@ Board* Board_Init() {
 
 	board->grid[4][4] = WHITE;
 	board->grid[4][5] = BLACK;
-	board->grid[5][4] = BLACK;//
+	board->grid[5][4] = BLACK;
 	board->grid[5][5] = WHITE;
 
 	
@@ -53,7 +53,6 @@ Pawn Board_addPawn(Board* board, int x, int y, Pawn pawn)
 	{
 		x++;
 		y++;
-		//printf("x:%d, y:%d\n", x, y);
 
 		for (int i = -1; i < 2; i++)
 			for (int j = -1; j < 2; j++)
